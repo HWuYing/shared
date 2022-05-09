@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppContextService = exports.APP_CONTEXT = void 0;
 const tslib_1 = require("tslib");
 const di_1 = require("@fm/di");
-const token_1 = require("../../token");
 const lodash_1 = require("lodash");
-const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
+const import_rxjs_1 = require("@fm/import-rxjs");
+const import_rxjs_2 = require("@fm/import-rxjs");
+const token_1 = require("../../token");
 exports.APP_CONTEXT = di_1.InjectorToken.get('APP_CONTEXT');
 let AppContextService = class AppContextService {
     ls;
@@ -29,7 +29,7 @@ let AppContextService = class AppContextService {
         Object.keys(resource).forEach((key) => {
             const { source, type: sourceType } = resource[key];
             if (sourceType === type) {
-                cacheResource.set(key, (0, rxjs_1.of)(source).pipe((0, operators_1.map)(lodash_1.cloneDeep)));
+                cacheResource.set(key, (0, import_rxjs_1.of)(source).pipe((0, import_rxjs_2.map)(lodash_1.cloneDeep)));
             }
         });
         this.resourceCache.set(type, cacheResource);

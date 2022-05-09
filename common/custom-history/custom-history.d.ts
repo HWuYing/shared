@@ -1,5 +1,5 @@
 import { LocatorStorage } from '@fm/di';
-import { Subject } from 'rxjs';
+import { Subject } from '@fm/import-rxjs';
 import { AbstractRouterIntercept } from './router-intercept.abstract';
 import { RouteInfo } from './type-api';
 export declare class SharedHistory {

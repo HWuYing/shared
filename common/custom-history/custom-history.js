@@ -5,8 +5,8 @@ const tslib_1 = require("tslib");
 const di_1 = require("@fm/di");
 const history_1 = require("history");
 const querystring_1 = require("querystring");
-const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
+const import_rxjs_1 = require("@fm/import-rxjs");
+const import_rxjs_2 = require("@fm/import-rxjs");
 const token_1 = require("../../token");
 const router_1 = require("./router");
 const router_intercept_abstract_1 = require("./router-intercept.abstract");
@@ -16,7 +16,7 @@ let SharedHistory = class SharedHistory {
     router;
     history;
     _routeInfo;
-    activeRoute = new rxjs_1.Subject().pipe((0, operators_1.shareReplay)(1));
+    activeRoute = new import_rxjs_1.Subject().pipe((0, import_rxjs_2.shareReplay)(1));
     constructor(ls, intercept) {
         this.ls = ls;
         this.intercept = intercept;

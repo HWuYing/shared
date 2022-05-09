@@ -1,5 +1,5 @@
+import { Observable } from '@fm/import-rxjs';
 import { AppContextService } from '../../providers/app-context';
-import { Observable } from 'rxjs';
 export declare class HttpClient {
     private appContext;
     private fetch;
