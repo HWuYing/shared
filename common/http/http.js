@@ -1,9 +1,12 @@
-import { __decorate, __metadata } from "tslib";
-import { Injectable } from '@fm/di';
-import { AppContextService } from '../../providers/app-context';
-import { from } from 'rxjs';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.HttpClient = void 0;
+const tslib_1 = require("tslib");
+const di_1 = require("@fm/di");
+const app_context_1 = require("../../providers/app-context");
+const rxjs_1 = require("rxjs");
 function factoryRequest(fetch, method, parseData) {
-    return (url, params) => from(fetch(url, { method, ...params }).then(parseData));
+    return (url, params) => (0, rxjs_1.from)(fetch(url, { method, ...params }).then(parseData));
 }
 let HttpClient = class HttpClient {
     appContext;
@@ -19,8 +22,8 @@ let HttpClient = class HttpClient {
         return factoryRequest(this.fetch, 'get', (res) => res.text())(req, params);
     }
 };
-HttpClient = __decorate([
-    Injectable(),
-    __metadata("design:paramtypes", [AppContextService])
+HttpClient = tslib_1.__decorate([
+    (0, di_1.Injectable)(),
+    tslib_1.__metadata("design:paramtypes", [app_context_1.AppContextService])
 ], HttpClient);
-export { HttpClient };
+exports.HttpClient = HttpClient;
