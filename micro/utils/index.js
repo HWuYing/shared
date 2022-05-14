@@ -1,16 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createMicroElementTemplate = exports.templateZip = void 0;
-const templateZip = (template, mapping = {}) => {
+export const templateZip = (template, mapping = {}) => {
     const keys = Object.keys(mapping);
     const formatTemplate = template.replace(/\n*/g, '').replace(/[ ]+/g, ' ');
     return keys.reduce((t, key) => t.replace(new RegExp(`\\{${key}\\}`, 'g'), mapping[key]), formatTemplate);
 };
-exports.templateZip = templateZip;
 // eslint-disable-next-line max-lines-per-function
-const createMicroElementTemplate = (microName, options) => {
+export const createMicroElementTemplate = (microName, options) => {
     const { initHtml = '', initStyle = '', linkToStyles = [] } = options;
-    return (0, exports.templateZip)(`
+    return templateZip(`
     (function() {
       let initStyle = '{initStyle}';
       let initHtml = '{initHtml}';
@@ -58,4 +54,3 @@ const createMicroElementTemplate = (microName, options) => {
         linkToStyles: JSON.stringify(linkToStyles)
     });
 };
-exports.createMicroElementTemplate = createMicroElementTemplate;

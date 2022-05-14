@@ -1,31 +1,28 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SharedHistory = void 0;
-const tslib_1 = require("tslib");
-const di_1 = require("@fm/di");
-const history_1 = require("history");
-const querystring_1 = require("querystring");
-const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
-const token_1 = require("../../token");
-const router_1 = require("./router");
-const router_intercept_abstract_1 = require("./router-intercept.abstract");
+import { __decorate, __metadata, __param } from "tslib";
+import { Inject, Injectable, LocatorStorage } from '@fm/di';
+import { parsePath } from 'history';
+import { parse } from 'querystring';
+import { Subject } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
+import { HISTORY, ROUTER_CONFIG, ROUTER_INTERCEPT } from '../../token';
+import { Router } from './router';
+import { AbstractRouterIntercept } from './router-intercept.abstract';
 let SharedHistory = class SharedHistory {
     ls;
     intercept;
     router;
     history;
     _routeInfo;
-    activeRoute = new rxjs_1.Subject().pipe((0, operators_1.shareReplay)(1));
+    activeRoute = new Subject().pipe(shareReplay(1));
     constructor(ls, intercept) {
         this.ls = ls;
         this.intercept = intercept;
-        this.history = this.ls.getProvider(token_1.HISTORY);
-        this.router = new router_1.Router(ls, this.ls.getProvider(token_1.ROUTER_CONFIG));
+        this.history = this.ls.getProvider(HISTORY);
+        this.router = new Router(ls, this.ls.getProvider(ROUTER_CONFIG));
         this.history.listen(this.listener.bind(this));
     }
     navigateTo(url) {
-        const location = (0, history_1.parsePath)(url);
+        const location = parsePath(url);
         this.resolveIntercept(location).then((status) => status && this.history.push(url));
     }
     async resolve() {
@@ -58,12 +55,12 @@ let SharedHistory = class SharedHistory {
     }
     parse(location) {
         const { pathname, search = '' } = location;
-        return [`/${pathname}`.replace('//', '/'), (0, querystring_1.parse)(search.replace(/^\?/, ''))];
+        return [`/${pathname}`.replace('//', '/'), parse(search.replace(/^\?/, ''))];
     }
 };
-SharedHistory = tslib_1.__decorate([
-    (0, di_1.Injectable)(),
-    tslib_1.__param(1, (0, di_1.Inject)(token_1.ROUTER_INTERCEPT)),
-    tslib_1.__metadata("design:paramtypes", [di_1.LocatorStorage, router_intercept_abstract_1.AbstractRouterIntercept])
+SharedHistory = __decorate([
+    Injectable(),
+    __param(1, Inject(ROUTER_INTERCEPT)),
+    __metadata("design:paramtypes", [LocatorStorage, AbstractRouterIntercept])
 ], SharedHistory);
-exports.SharedHistory = SharedHistory;
+export { SharedHistory };

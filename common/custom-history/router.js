@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Router = void 0;
-const lodash_1 = require("lodash");
-const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
-const serialize_router_1 = require("./serialize-router");
+import { cloneDeepWith, isBoolean, isFunction } from 'lodash';
+import { forkJoin, from, isObservable, of } from 'rxjs';
+import { mergeMap, tap } from 'rxjs/operators';
+import { serializeRouter } from './serialize-router';
 const getRex = () => /^:([^:]+)/g;
-class Router {
+export class Router {
     ls;
     routerConfig;
     routerList = [];
@@ -31,7 +28,7 @@ class Router {
                 return true;
             });
         });
-        const routeInfo = (0, lodash_1.cloneDeepWith)({ ...router, params }, (value) => (0, lodash_1.isFunction)(value) ? value : undefined);
+        const routeInfo = cloneDeepWith({ ...router, params }, (value) => isFunction(value) ? value : undefined);
         return this.pathKey(pathname, routeInfo);
     }
     async loadModule(routeInfo) {
@@ -52,13 +49,13 @@ class Router {
             const { canActivate = [] } = routeItem;
             return canActivate.map((item) => [routeItem, item]);
         });
-        return execList.reduce((ob, [routeItem, activate]) => ob.pipe((0, operators_1.mergeMap)((result) => {
+        return execList.reduce((ob, [routeItem, activate]) => ob.pipe(mergeMap((result) => {
             if (result !== false) {
                 const activeResult = this.ls.getProvider(activate).canActivate(routeInfo, routeItem);
-                return (0, lodash_1.isBoolean)(activeResult) ? (0, rxjs_1.of)(activeResult) : (0, rxjs_1.from)(activeResult);
+                return isBoolean(activeResult) ? of(activeResult) : from(activeResult);
             }
-            return (0, rxjs_1.of)(result);
-        })), (0, rxjs_1.of)(true));
+            return of(result);
+        })), of(true));
     }
     loadResolve(routeInfo) {
         const execList = this.getExecList(routeInfo, (routeItem) => {
@@ -72,13 +69,13 @@ class Router {
             routeItem.props = props;
             if (server && server.resolve) {
                 result = server.resolve(routeInfo, routeItem);
-                if (result && (result.then || (0, rxjs_1.isObservable)(result))) {
-                    return list.push((0, rxjs_1.from)(result).pipe((0, operators_1.tap)((r) => props[key] = r)));
+                if (result && (result.then || isObservable(result))) {
+                    return list.push(from(result).pipe(tap((r) => props[key] = r)));
                 }
             }
             props[key] = result;
         });
-        return list.length ? (0, rxjs_1.forkJoin)(list) : (0, rxjs_1.of)([]);
+        return list.length ? forkJoin(list) : of([]);
     }
     pathKey(pathname, routeInfo) {
         const { params, list = [] } = routeInfo;
@@ -109,7 +106,6 @@ class Router {
     refreshRouterList() {
         const routerConfig = this.routerConfig;
         this.routerConfig = Array.isArray(routerConfig) ? routerConfig : [routerConfig];
-        this.routerList = (0, serialize_router_1.serializeRouter)(this.routerConfig);
+        this.routerList = serializeRouter(this.routerConfig);
     }
 }
-exports.Router = Router;

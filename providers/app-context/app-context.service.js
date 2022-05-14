@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppContextService = exports.APP_CONTEXT = void 0;
-const tslib_1 = require("tslib");
-const di_1 = require("@fm/di");
-const lodash_1 = require("lodash");
-const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
-const token_1 = require("../../token");
-exports.APP_CONTEXT = di_1.InjectorToken.get('APP_CONTEXT');
+import { __decorate, __metadata, __param } from "tslib";
+import { Inject, InjectorToken, LocatorStorage } from '@fm/di';
+import { cloneDeep } from 'lodash';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ENVIRONMENT } from '../../token';
+export const APP_CONTEXT = InjectorToken.get('APP_CONTEXT');
 let AppContextService = class AppContextService {
     ls;
     resourceCache = new Map();
@@ -15,10 +12,10 @@ let AppContextService = class AppContextService {
         this.ls = ls;
     }
     getContext() {
-        return this.ls.getProvider(exports.APP_CONTEXT) || {};
+        return this.ls.getProvider(APP_CONTEXT) || {};
     }
     getEnvironment() {
-        return this.ls.getProvider(token_1.ENVIRONMENT);
+        return this.ls.getProvider(ENVIRONMENT);
     }
     getResourceCache(type) {
         if (!type || this.resourceCache.has(type)) {
@@ -29,7 +26,7 @@ let AppContextService = class AppContextService {
         Object.keys(resource).forEach((key) => {
             const { source, type: sourceType } = resource[key];
             if (sourceType === type) {
-                cacheResource.set(key, (0, rxjs_1.of)(source).pipe((0, operators_1.map)(lodash_1.cloneDeep)));
+                cacheResource.set(key, of(source).pipe(map(cloneDeep)));
             }
         });
         this.resourceCache.set(type, cacheResource);
@@ -45,8 +42,8 @@ let AppContextService = class AppContextService {
         return this.getContext().isMicro;
     }
 };
-AppContextService = tslib_1.__decorate([
-    tslib_1.__param(0, (0, di_1.Inject)(di_1.LocatorStorage)),
-    tslib_1.__metadata("design:paramtypes", [di_1.LocatorStorage])
+AppContextService = __decorate([
+    __param(0, Inject(LocatorStorage)),
+    __metadata("design:paramtypes", [LocatorStorage])
 ], AppContextService);
-exports.AppContextService = AppContextService;
+export { AppContextService };

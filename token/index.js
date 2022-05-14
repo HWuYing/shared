@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ROUTER_INTERCEPT = exports.ROUTER_CONFIG = exports.APP_INITIALIZER = exports.MICRO_OPTIONS = exports.HISTORY = exports.ENVIRONMENT = void 0;
-const di_1 = require("@fm/di");
-exports.ENVIRONMENT = di_1.InjectorToken.get('ENVIRONMENT');
-exports.HISTORY = di_1.InjectorToken.get('HISTORY');
-exports.MICRO_OPTIONS = di_1.InjectorToken.get('MICRO_MANAGER');
-exports.APP_INITIALIZER = di_1.InjectorToken.get('APP_INITIALIZER');
-exports.ROUTER_CONFIG = di_1.InjectorToken.get('ROUTER_CONFIG');
-exports.ROUTER_INTERCEPT = di_1.InjectorToken.get('ROUTER_INTERCEPT');
+import { InjectorToken } from '@fm/di';
+export const ENVIRONMENT = InjectorToken.get('ENVIRONMENT');
+export const HISTORY = InjectorToken.get('HISTORY');
+export const MICRO_OPTIONS = InjectorToken.get('MICRO_MANAGER');
+export const LAZY_MICRO = InjectorToken.get('LAZY_MICRO');
+export const APP_INITIALIZER = InjectorToken.get('APP_INITIALIZER');
+export const ROUTER_CONFIG = InjectorToken.get('ROUTER_CONFIG');
+export const ROUTER_INTERCEPT = InjectorToken.get('ROUTER_INTERCEPT');
