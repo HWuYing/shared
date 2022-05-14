@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Router = void 0;
 const lodash_1 = require("lodash");
-const import_rxjs_1 = require("@fm/import-rxjs");
-const import_rxjs_2 = require("@fm/import-rxjs");
+const rxjs_1 = require("rxjs");
+const operators_1 = require("rxjs/operators");
 const serialize_router_1 = require("./serialize-router");
 const getRex = () => /^:([^:]+)/g;
 class Router {
@@ -52,13 +52,13 @@ class Router {
             const { canActivate = [] } = routeItem;
             return canActivate.map((item) => [routeItem, item]);
         });
-        return execList.reduce((ob, [routeItem, activate]) => ob.pipe((0, import_rxjs_2.mergeMap)((result) => {
+        return execList.reduce((ob, [routeItem, activate]) => ob.pipe((0, operators_1.mergeMap)((result) => {
             if (result !== false) {
                 const activeResult = this.ls.getProvider(activate).canActivate(routeInfo, routeItem);
-                return (0, lodash_1.isBoolean)(activeResult) ? (0, import_rxjs_1.of)(activeResult) : (0, import_rxjs_1.from)(activeResult);
+                return (0, lodash_1.isBoolean)(activeResult) ? (0, rxjs_1.of)(activeResult) : (0, rxjs_1.from)(activeResult);
             }
-            return (0, import_rxjs_1.of)(result);
-        })), (0, import_rxjs_1.of)(true));
+            return (0, rxjs_1.of)(result);
+        })), (0, rxjs_1.of)(true));
     }
     loadResolve(routeInfo) {
         const execList = this.getExecList(routeInfo, (routeItem) => {
@@ -72,13 +72,13 @@ class Router {
             routeItem.props = props;
             if (server && server.resolve) {
                 result = server.resolve(routeInfo, routeItem);
-                if (result && (result.then || (0, import_rxjs_1.isObservable)(result))) {
-                    return list.push((0, import_rxjs_1.from)(result).pipe((0, import_rxjs_2.tap)((r) => props[key] = r)));
+                if (result && (result.then || (0, rxjs_1.isObservable)(result))) {
+                    return list.push((0, rxjs_1.from)(result).pipe((0, operators_1.tap)((r) => props[key] = r)));
                 }
             }
             props[key] = result;
         });
-        return list.length ? (0, import_rxjs_1.forkJoin)(list) : (0, import_rxjs_1.of)([]);
+        return list.length ? (0, rxjs_1.forkJoin)(list) : (0, rxjs_1.of)([]);
     }
     pathKey(pathname, routeInfo) {
         const { params, list = [] } = routeInfo;
