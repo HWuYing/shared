@@ -40,14 +40,14 @@ let SharedHistory = class SharedHistory {
         if (this.intercept) {
             await this.intercept.resolve(this.currentRouteInfo);
         }
-        await this.router.loadResolve(this.currentRouteInfo).toPromise();
-        this.activeRoute.next(this._routeInfo);
+        await (0, rxjs_1.lastValueFrom)(this.router.loadResolve(this.currentRouteInfo));
+        this.activeRoute.next(this.currentRouteInfo);
     }
     async resolveIntercept(location) {
         const [pathname, query] = this.parse(location);
         const { params, list = [] } = await this.router.getRouterByPath(pathname);
         this._routeInfo = { path: pathname, query, params, list };
-        const status = await this.router.canActivate(this.currentRouteInfo).toPromise();
+        const status = await (0, rxjs_1.lastValueFrom)(this.router.canActivate(this.currentRouteInfo));
         if (!status) {
             this._routeInfo.list = [];
         }
