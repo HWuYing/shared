@@ -3,10 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SharedHistory = void 0;
 const tslib_1 = require("tslib");
 const di_1 = require("@fm/di");
+const import_rxjs_1 = require("@fm/import-rxjs");
 const history_1 = require("history");
 const querystring_1 = require("querystring");
-const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
 const token_1 = require("../../token");
 const router_1 = require("./router");
 const router_intercept_abstract_1 = require("./router-intercept.abstract");
@@ -16,7 +15,7 @@ let SharedHistory = class SharedHistory {
     router;
     history;
     _routeInfo;
-    activeRoute = new rxjs_1.Subject().pipe((0, operators_1.shareReplay)(1));
+    activeRoute = new import_rxjs_1.Subject().pipe((0, import_rxjs_1.shareReplay)(1));
     constructor(ls, intercept) {
         this.ls = ls;
         this.intercept = intercept;
@@ -40,14 +39,14 @@ let SharedHistory = class SharedHistory {
         if (this.intercept) {
             await this.intercept.resolve(this.currentRouteInfo);
         }
-        await (0, rxjs_1.lastValueFrom)(this.router.loadResolve(this.currentRouteInfo));
+        await (0, import_rxjs_1.lastValueFrom)(this.router.loadResolve(this.currentRouteInfo));
         this.activeRoute.next(this.currentRouteInfo);
     }
     async resolveIntercept(location) {
         const [pathname, query] = this.parse(location);
         const { params, list = [] } = await this.router.getRouterByPath(pathname);
         this._routeInfo = { path: pathname, query, params, list };
-        const status = await (0, rxjs_1.lastValueFrom)(this.router.canActivate(this.currentRouteInfo));
+        const status = await (0, import_rxjs_1.lastValueFrom)(this.router.canActivate(this.currentRouteInfo));
         if (!status) {
             this._routeInfo.list = [];
         }
