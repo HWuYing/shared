@@ -1,5 +1,5 @@
 import { LocatorStorage } from '@fm/di';
-import { Observable } from '@fm/import-rxjs';
+import { Observable } from 'rxjs';
 import { RouteInfo } from './type-api';
 export declare class Router {
     private ls;

@@ -1,6 +1,6 @@
 import { __decorate, __metadata } from "tslib";
 import { Injectable } from '@fm/di';
-import { from } from '@fm/import-rxjs';
+import { from } from 'rxjs';
 import { AppContextService } from '../../providers/app-context';
 function factoryRequest(fetch, method, parseData) {
     return (url, params) => from(fetch(url, { method, ...params }).then(parseData));

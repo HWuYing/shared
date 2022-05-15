@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.JsonConfigService = void 0;
 const tslib_1 = require("tslib");
 const di_1 = require("@fm/di");
-const import_rxjs_1 = require("@fm/import-rxjs");
 const lodash_1 = require("lodash");
+const operators_1 = require("rxjs/operators");
 const app_context_1 = require("../app-context");
 let JsonConfigService = class JsonConfigService {
     ls;
@@ -18,7 +18,7 @@ let JsonConfigService = class JsonConfigService {
     getJsonConfig(url) {
         let subject = this.cacheConfig.get(url);
         if (!subject) {
-            subject = this.getServerFetchData(url).pipe((0, import_rxjs_1.shareReplay)(1), (0, import_rxjs_1.map)(lodash_1.cloneDeep));
+            subject = this.getServerFetchData(url).pipe((0, operators_1.shareReplay)(1), (0, operators_1.map)(lodash_1.cloneDeep));
             this.cacheConfig.set(url, subject);
         }
         return subject;

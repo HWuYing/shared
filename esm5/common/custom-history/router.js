@@ -1,5 +1,6 @@
-import { forkJoin, from, isObservable, mergeMap, of, tap } from '@fm/import-rxjs';
 import { cloneDeepWith, isBoolean, isFunction } from 'lodash';
+import { forkJoin, from, isObservable, of } from 'rxjs';
+import { mergeMap, tap } from 'rxjs/operators';
 import { serializeRouter } from './serialize-router';
 const getRex = () => /^:([^:]+)/g;
 export class Router {

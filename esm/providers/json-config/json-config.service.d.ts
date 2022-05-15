@@ -1,5 +1,5 @@
 import { LocatorStorage } from '@fm/di';
-import { Observable } from '@fm/import-rxjs';
+import { Observable } from 'rxjs';
 import { AppContextService } from '../app-context';
 export declare abstract class JsonConfigService {
     protected ls: LocatorStorage;

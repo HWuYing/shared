@@ -1,7 +1,7 @@
 import { __decorate, __metadata, __param } from "tslib";
 import { Inject, LocatorStorage } from '@fm/di';
-import { map, shareReplay } from '@fm/import-rxjs';
 import { cloneDeep } from 'lodash';
+import { map, shareReplay } from 'rxjs/operators';
 import { AppContextService } from '../app-context';
 let JsonConfigService = class JsonConfigService {
     ls;

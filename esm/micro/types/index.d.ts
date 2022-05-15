@@ -1,4 +1,4 @@
-import { Observable, Subject } from '@fm/import-rxjs';
+import { Observable, Subject } from 'rxjs';
 export interface MicroStoreInterface {
     onMounted(container: HTMLElement, options?: any): void;
     unMounted(container: HTMLElement): void;

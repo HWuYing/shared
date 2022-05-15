@@ -1,4 +1,4 @@
-import { Observable } from '@fm/import-rxjs';
+import { Observable } from 'rxjs';
 import { AppContextService } from '../../providers/app-context';
 export declare class HttpClient {
     private appContext;

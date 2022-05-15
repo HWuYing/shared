@@ -1,8 +1,9 @@
 import { __decorate, __metadata, __param } from "tslib";
 import { Inject, Injectable, LocatorStorage } from '@fm/di';
-import { lastValueFrom, shareReplay, Subject } from '@fm/import-rxjs';
 import { parsePath } from 'history';
 import { parse } from 'querystring';
+import { lastValueFrom, Subject } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 import { HISTORY, ROUTER_CONFIG, ROUTER_INTERCEPT } from '../../token';
 import { Router } from './router';
 import { AbstractRouterIntercept } from './router-intercept.abstract';

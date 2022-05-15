@@ -5,6 +5,62 @@
   "main": "./cjs/index.js",
   "module": "./esm5/index.js",
   "es2015": "./esm/index.js",
+  "exports": {
+    ".": {
+      "node": "./cjs/index.js",
+      "require": "./cjs/index.js",
+      "es2015": "./esm/index.js",
+      "default": "./esm5/index.js"
+    },
+    "./common": {
+      "node": "./cjs/common/index.js",
+      "require": "./cjs/common/index.js",
+      "es2015": "./esm/common/index.js",
+      "default": "./esm5/common/index.js"
+    },
+    "./common/http": {
+      "node": "./cjs/common/http/index.js",
+      "require": "./cjs/common/http/index.js",
+      "es2015": "./esm/common/http/index.js",
+      "default": "./esm5/common/http/index.js"
+    },
+    "./common/custom-history": {
+      "node": "./cjs/common/custom-history/index.js",
+      "require": "./cjs/common/custom-history/index.js",
+      "es2015": "./esm/common/custom-history/index.js",
+      "default": "./esm5/common/custom-history/index.js"
+    }, 
+    "./providers": {
+      "node": "./cjs/providers/index.js",
+      "require": "./cjs/providers/index.js",
+      "es2015": "./esm/providers/index.js",
+      "default": "./esm5/providers/index.js"
+    },
+    "./providers/app-context": {
+      "node": "./cjs/providers/app-context/index.js",
+      "require": "./cjs/providers/app-context/index.js",
+      "es2015": "./esm/providers/app-context/index.js",
+      "default": "./esm5/providers/app-context/index.js"
+    },
+    "./providers/json-config": {
+      "node": "./cjs/providers/json-config/index.js",
+      "require": "./cjs/providers/json-config/index.js",
+      "es2015": "./esm/providers/json-config/index.js",
+      "default": "./esm5/providers/json-config/index.js"
+    },
+    "./micro": {
+      "node": "./cjs/micro/index.js",
+      "require": "./cjs/micro/index.js",
+      "es2015": "./esm/micro/index.js",
+      "default": "./esm5/micro/index.js"
+    },
+    "./token": {
+      "node": "./cjs/token/index.js",
+      "require": "./cjs/token/index.js",
+      "es2015": "./esm/token/index.js",
+      "default": "./esm5/token/index.js"
+    }
+  },
   "dependencies": {
     "@fm/import-rxjs": "git+https://github.com/hwyn/import-rxjs.git"
   },

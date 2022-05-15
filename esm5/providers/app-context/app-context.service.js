@@ -1,7 +1,8 @@
 import { __decorate, __metadata, __param } from "tslib";
 import { Inject, InjectorToken, LocatorStorage } from '@fm/di';
-import { map, of } from '@fm/import-rxjs';
 import { cloneDeep } from 'lodash';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ENVIRONMENT } from '../../token';
 export const APP_CONTEXT = InjectorToken.get('APP_CONTEXT');
 let AppContextService = class AppContextService {
