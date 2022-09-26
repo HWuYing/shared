@@ -4,7 +4,6 @@ exports.SharedHistory = void 0;
 const tslib_1 = require("tslib");
 const di_1 = require("@fm/di");
 const history_1 = require("history");
-const querystring_1 = require("querystring");
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
 const token_1 = require("../../token");
@@ -58,7 +57,15 @@ let SharedHistory = class SharedHistory {
     }
     parse(location) {
         const { pathname, search = '' } = location;
-        return [`/${pathname}`.replace('//', '/'), (0, querystring_1.parse)(search.replace(/^\?/, ''))];
+        return [`/${pathname}`.replace('//', '/'), this.parseSearch(search.replace(/^\?/, ''))];
+    }
+    parseSearch(search) {
+        const query = {};
+        (search.match(/[^&]/ig) || []).forEach((item) => {
+            const [name, value] = item.split('=');
+            query[name] = value;
+        });
+        return query;
     }
 };
 SharedHistory = tslib_1.__decorate([

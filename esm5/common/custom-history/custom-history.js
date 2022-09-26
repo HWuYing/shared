@@ -1,7 +1,6 @@
 import { __decorate, __metadata, __param } from "tslib";
 import { Inject, Injectable, Injector } from '@fm/di';
 import { parsePath } from 'history';
-import { parse } from 'querystring';
 import { lastValueFrom, Subject } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { HISTORY, ROUTER_CONFIG, ROUTER_INTERCEPT } from '../../token';
@@ -55,7 +54,15 @@ let SharedHistory = class SharedHistory {
     }
     parse(location) {
         const { pathname, search = '' } = location;
-        return [`/${pathname}`.replace('//', '/'), parse(search.replace(/^\?/, ''))];
+        return [`/${pathname}`.replace('//', '/'), this.parseSearch(search.replace(/^\?/, ''))];
+    }
+    parseSearch(search) {
+        const query = {};
+        (search.match(/[^&]/ig) || []).forEach((item) => {
+            const [name, value] = item.split('=');
+            query[name] = value;
+        });
+        return query;
     }
 };
 SharedHistory = __decorate([

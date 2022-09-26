@@ -16,4 +16,5 @@ export declare class SharedHistory {
     private listener;
     private resolveIntercept;
     private parse;
+    private parseSearch;
 }
