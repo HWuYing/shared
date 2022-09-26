@@ -1,15 +1,15 @@
-import { InjectorToken, LocatorStorage } from '@fm/di';
+import { Injector, InjectorToken } from '@fm/di';
 import { MicroManageInterface } from '../../micro/types';
 export declare type Fetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 export declare const APP_CONTEXT: InjectorToken;
 export declare abstract class AppContextService {
-    protected ls: LocatorStorage;
+    protected injector: Injector;
     private resourceCache;
-    constructor(ls: LocatorStorage);
+    constructor(injector: Injector);
     getContext<T = any>(): T;
     getEnvironment(): any;
     getResourceCache(type?: string): Map<any, any>;
-    get microManage(): MicroManageInterface;
     get fetch(): Fetch;
     get isMicro(): boolean;
+    get microManage(): MicroManageInterface;
 }

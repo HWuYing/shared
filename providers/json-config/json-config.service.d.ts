@@ -1,11 +1,11 @@
-import { LocatorStorage } from '@fm/di';
+import { Injector } from '@fm/di';
 import { Observable } from 'rxjs';
 import { AppContextService } from '../app-context';
 export declare abstract class JsonConfigService {
-    protected ls: LocatorStorage;
+    protected injector: Injector;
     protected appContext: AppContextService;
     protected cacheConfig: Map<string, Observable<object>>;
     protected abstract getServerFetchData(url: string): Observable<object>;
-    constructor(ls: LocatorStorage);
+    constructor(injector: Injector);
     getJsonConfig(url: string): Observable<object>;
 }
