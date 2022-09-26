@@ -1,15 +1,15 @@
 import { __decorate, __metadata, __param } from "tslib";
-import { Inject, LocatorStorage } from '@fm/di';
+import { Inject, Injector } from '@fm/di';
 import { cloneDeep } from 'lodash';
 import { map, shareReplay } from 'rxjs/operators';
 import { AppContextService } from '../app-context';
 let JsonConfigService = class JsonConfigService {
-    ls;
+    injector;
     appContext;
     cacheConfig;
-    constructor(ls) {
-        this.ls = ls;
-        this.appContext = this.ls.getProvider(AppContextService);
+    constructor(injector) {
+        this.injector = injector;
+        this.appContext = this.injector.get(AppContextService);
         this.cacheConfig = this.appContext.getResourceCache('file-static');
     }
     getJsonConfig(url) {
@@ -22,7 +22,7 @@ let JsonConfigService = class JsonConfigService {
     }
 };
 JsonConfigService = __decorate([
-    __param(0, Inject(LocatorStorage)),
-    __metadata("design:paramtypes", [LocatorStorage])
+    __param(0, Inject(Injector)),
+    __metadata("design:paramtypes", [Injector])
 ], JsonConfigService);
 export { JsonConfigService };

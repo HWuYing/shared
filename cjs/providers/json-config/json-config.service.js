@@ -7,12 +7,12 @@ const lodash_1 = require("lodash");
 const operators_1 = require("rxjs/operators");
 const app_context_1 = require("../app-context");
 let JsonConfigService = class JsonConfigService {
-    ls;
+    injector;
     appContext;
     cacheConfig;
-    constructor(ls) {
-        this.ls = ls;
-        this.appContext = this.ls.getProvider(app_context_1.AppContextService);
+    constructor(injector) {
+        this.injector = injector;
+        this.appContext = this.injector.get(app_context_1.AppContextService);
         this.cacheConfig = this.appContext.getResourceCache('file-static');
     }
     getJsonConfig(url) {
@@ -25,7 +25,7 @@ let JsonConfigService = class JsonConfigService {
     }
 };
 JsonConfigService = tslib_1.__decorate([
-    tslib_1.__param(0, (0, di_1.Inject)(di_1.LocatorStorage)),
-    tslib_1.__metadata("design:paramtypes", [di_1.LocatorStorage])
+    tslib_1.__param(0, (0, di_1.Inject)(di_1.Injector)),
+    tslib_1.__metadata("design:paramtypes", [di_1.Injector])
 ], JsonConfigService);
 exports.JsonConfigService = JsonConfigService;

@@ -7,11 +7,11 @@ const operators_1 = require("rxjs/operators");
 const serialize_router_1 = require("./serialize-router");
 const getRex = () => /^:([^:]+)/g;
 class Router {
-    ls;
+    injector;
     routerConfig;
     routerList = [];
-    constructor(ls, routerConfig) {
-        this.ls = ls;
+    constructor(injector, routerConfig) {
+        this.injector = injector;
         this.routerConfig = routerConfig;
         this.refreshRouterList();
     }
@@ -54,7 +54,7 @@ class Router {
         });
         return execList.reduce((ob, [routeItem, activate]) => ob.pipe((0, operators_1.mergeMap)((result) => {
             if (result !== false) {
-                const activeResult = this.ls.getProvider(activate).canActivate(routeInfo, routeItem);
+                const activeResult = this.injector.get(activate).canActivate(routeInfo, routeItem);
                 return (0, lodash_1.isBoolean)(activeResult) ? (0, rxjs_1.of)(activeResult) : (0, rxjs_1.from)(activeResult);
             }
             return (0, rxjs_1.of)(result);
@@ -68,7 +68,7 @@ class Router {
         const list = [];
         execList.forEach(([routeItem, [key, result]]) => {
             const { props = {} } = routeItem;
-            const server = this.ls.getProvider(result);
+            const server = this.injector.get(result);
             routeItem.props = props;
             if (server && server.resolve) {
                 result = server.resolve(routeInfo, routeItem);

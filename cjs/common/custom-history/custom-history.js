@@ -11,17 +11,17 @@ const token_1 = require("../../token");
 const router_1 = require("./router");
 const router_intercept_abstract_1 = require("./router-intercept.abstract");
 let SharedHistory = class SharedHistory {
-    ls;
+    injector;
     intercept;
     router;
     history;
     _routeInfo;
     activeRoute = new rxjs_1.Subject().pipe((0, operators_1.shareReplay)(1));
-    constructor(ls, intercept) {
-        this.ls = ls;
+    constructor(injector, intercept) {
+        this.injector = injector;
         this.intercept = intercept;
-        this.history = this.ls.getProvider(token_1.HISTORY);
-        this.router = new router_1.Router(ls, this.ls.getProvider(token_1.ROUTER_CONFIG));
+        this.history = this.injector.get(token_1.HISTORY);
+        this.router = new router_1.Router(injector, this.injector.get(token_1.ROUTER_CONFIG));
         this.history.listen(this.listener.bind(this));
     }
     navigateTo(url) {
@@ -64,6 +64,6 @@ let SharedHistory = class SharedHistory {
 SharedHistory = tslib_1.__decorate([
     (0, di_1.Injectable)(),
     tslib_1.__param(1, (0, di_1.Inject)(token_1.ROUTER_INTERCEPT)),
-    tslib_1.__metadata("design:paramtypes", [di_1.LocatorStorage, router_intercept_abstract_1.AbstractRouterIntercept])
+    tslib_1.__metadata("design:paramtypes", [di_1.Injector, router_intercept_abstract_1.AbstractRouterIntercept])
 ], SharedHistory);
 exports.SharedHistory = SharedHistory;

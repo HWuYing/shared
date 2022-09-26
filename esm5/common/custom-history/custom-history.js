@@ -1,5 +1,5 @@
 import { __decorate, __metadata, __param } from "tslib";
-import { Inject, Injectable, LocatorStorage } from '@fm/di';
+import { Inject, Injectable, Injector } from '@fm/di';
 import { parsePath } from 'history';
 import { parse } from 'querystring';
 import { lastValueFrom, Subject } from 'rxjs';
@@ -8,17 +8,17 @@ import { HISTORY, ROUTER_CONFIG, ROUTER_INTERCEPT } from '../../token';
 import { Router } from './router';
 import { AbstractRouterIntercept } from './router-intercept.abstract';
 let SharedHistory = class SharedHistory {
-    ls;
+    injector;
     intercept;
     router;
     history;
     _routeInfo;
     activeRoute = new Subject().pipe(shareReplay(1));
-    constructor(ls, intercept) {
-        this.ls = ls;
+    constructor(injector, intercept) {
+        this.injector = injector;
         this.intercept = intercept;
-        this.history = this.ls.getProvider(HISTORY);
-        this.router = new Router(ls, this.ls.getProvider(ROUTER_CONFIG));
+        this.history = this.injector.get(HISTORY);
+        this.router = new Router(injector, this.injector.get(ROUTER_CONFIG));
         this.history.listen(this.listener.bind(this));
     }
     navigateTo(url) {
@@ -61,6 +61,6 @@ let SharedHistory = class SharedHistory {
 SharedHistory = __decorate([
     Injectable(),
     __param(1, Inject(ROUTER_INTERCEPT)),
-    __metadata("design:paramtypes", [LocatorStorage, AbstractRouterIntercept])
+    __metadata("design:paramtypes", [Injector, AbstractRouterIntercept])
 ], SharedHistory);
 export { SharedHistory };

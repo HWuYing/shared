@@ -4,11 +4,11 @@ import { mergeMap, tap } from 'rxjs/operators';
 import { serializeRouter } from './serialize-router';
 const getRex = () => /^:([^:]+)/g;
 export class Router {
-    ls;
+    injector;
     routerConfig;
     routerList = [];
-    constructor(ls, routerConfig) {
-        this.ls = ls;
+    constructor(injector, routerConfig) {
+        this.injector = injector;
         this.routerConfig = routerConfig;
         this.refreshRouterList();
     }
@@ -51,7 +51,7 @@ export class Router {
         });
         return execList.reduce((ob, [routeItem, activate]) => ob.pipe(mergeMap((result) => {
             if (result !== false) {
-                const activeResult = this.ls.getProvider(activate).canActivate(routeInfo, routeItem);
+                const activeResult = this.injector.get(activate).canActivate(routeInfo, routeItem);
                 return isBoolean(activeResult) ? of(activeResult) : from(activeResult);
             }
             return of(result);
@@ -65,7 +65,7 @@ export class Router {
         const list = [];
         execList.forEach(([routeItem, [key, result]]) => {
             const { props = {} } = routeItem;
-            const server = this.ls.getProvider(result);
+            const server = this.injector.get(result);
             routeItem.props = props;
             if (server && server.resolve) {
                 result = server.resolve(routeInfo, routeItem);

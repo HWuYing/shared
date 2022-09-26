@@ -1,21 +1,21 @@
 import { __decorate, __metadata, __param } from "tslib";
-import { Inject, InjectorToken, LocatorStorage } from '@fm/di';
+import { Inject, Injector, InjectorToken } from '@fm/di';
 import { cloneDeep } from 'lodash';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ENVIRONMENT } from '../../token';
 export const APP_CONTEXT = InjectorToken.get('APP_CONTEXT');
 let AppContextService = class AppContextService {
-    ls;
+    injector;
     resourceCache = new Map();
-    constructor(ls) {
-        this.ls = ls;
+    constructor(injector) {
+        this.injector = injector;
     }
     getContext() {
-        return this.ls.getProvider(APP_CONTEXT) || {};
+        return this.injector.get(APP_CONTEXT) || {};
     }
     getEnvironment() {
-        return this.ls.getProvider(ENVIRONMENT);
+        return this.injector.get(ENVIRONMENT);
     }
     getResourceCache(type) {
         if (!type || this.resourceCache.has(type)) {
@@ -32,18 +32,18 @@ let AppContextService = class AppContextService {
         this.resourceCache.set(type, cacheResource);
         return cacheResource;
     }
-    get microManage() {
-        return this.getContext().useMicroManage();
-    }
     get fetch() {
         return this.getContext().fetch;
     }
     get isMicro() {
         return this.getContext().isMicro;
     }
+    get microManage() {
+        return this.getContext().useMicroManage();
+    }
 };
 AppContextService = __decorate([
-    __param(0, Inject(LocatorStorage)),
-    __metadata("design:paramtypes", [LocatorStorage])
+    __param(0, Inject(Injector)),
+    __metadata("design:paramtypes", [Injector])
 ], AppContextService);
 export { AppContextService };

@@ -9,16 +9,16 @@ const operators_1 = require("rxjs/operators");
 const token_1 = require("../../token");
 exports.APP_CONTEXT = di_1.InjectorToken.get('APP_CONTEXT');
 let AppContextService = class AppContextService {
-    ls;
+    injector;
     resourceCache = new Map();
-    constructor(ls) {
-        this.ls = ls;
+    constructor(injector) {
+        this.injector = injector;
     }
     getContext() {
-        return this.ls.getProvider(exports.APP_CONTEXT) || {};
+        return this.injector.get(exports.APP_CONTEXT) || {};
     }
     getEnvironment() {
-        return this.ls.getProvider(token_1.ENVIRONMENT);
+        return this.injector.get(token_1.ENVIRONMENT);
     }
     getResourceCache(type) {
         if (!type || this.resourceCache.has(type)) {
@@ -35,18 +35,18 @@ let AppContextService = class AppContextService {
         this.resourceCache.set(type, cacheResource);
         return cacheResource;
     }
-    get microManage() {
-        return this.getContext().useMicroManage();
-    }
     get fetch() {
         return this.getContext().fetch;
     }
     get isMicro() {
         return this.getContext().isMicro;
     }
+    get microManage() {
+        return this.getContext().useMicroManage();
+    }
 };
 AppContextService = tslib_1.__decorate([
-    tslib_1.__param(0, (0, di_1.Inject)(di_1.LocatorStorage)),
-    tslib_1.__metadata("design:paramtypes", [di_1.LocatorStorage])
+    tslib_1.__param(0, (0, di_1.Inject)(di_1.Injector)),
+    tslib_1.__metadata("design:paramtypes", [di_1.Injector])
 ], AppContextService);
 exports.AppContextService = AppContextService;
