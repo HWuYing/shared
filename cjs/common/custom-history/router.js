@@ -55,7 +55,7 @@ class Router {
         return execList.reduce((ob, [routeItem, activate]) => ob.pipe((0, operators_1.mergeMap)((result) => {
             if (result !== false) {
                 const activeResult = this.injector.get(activate).canActivate(routeInfo, routeItem);
-                return (0, lodash_1.isBoolean)(activeResult) ? (0, rxjs_1.of)(activeResult) : (0, rxjs_1.from)(activeResult);
+                return this.toObservable(activeResult);
             }
             return (0, rxjs_1.of)(result);
         })), (0, rxjs_1.of)(true));
@@ -73,7 +73,7 @@ class Router {
             if (server && server.resolve) {
                 result = server.resolve(routeInfo, routeItem);
                 if (result && (result.then || (0, rxjs_1.isObservable)(result))) {
-                    return list.push((0, rxjs_1.from)(result).pipe((0, operators_1.tap)((r) => props[key] = r)));
+                    return list.push(this.toObservable(result).pipe((0, operators_1.tap)((r) => props[key] = r)));
                 }
             }
             props[key] = result;
@@ -110,6 +110,12 @@ class Router {
         const routerConfig = this.routerConfig;
         this.routerConfig = Array.isArray(routerConfig) ? routerConfig : [routerConfig];
         this.routerList = (0, serialize_router_1.serializeRouter)(this.routerConfig);
+    }
+    toObservable(result) {
+        if ((0, rxjs_1.isObservable)(result)) {
+            return result;
+        }
+        return result.then ? (0, rxjs_1.from)(result) : (0, rxjs_1.of)(result);
     }
 }
 exports.Router = Router;

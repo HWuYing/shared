@@ -54,3 +54,12 @@ export const createMicroElementTemplate = (microName, options) => {
         linkToStyles: JSON.stringify(linkToStyles)
     });
 };
+export const serializableAssets = (entrypoints) => {
+    const staticAssets = { js: [], links: [] };
+    Object.keys(entrypoints).forEach((key) => {
+        const { js = [], css = [] } = entrypoints[key];
+        staticAssets.js.push(...js);
+        staticAssets.links.push(...css);
+    });
+    return staticAssets;
+};

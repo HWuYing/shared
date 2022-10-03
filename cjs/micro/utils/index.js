@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createMicroElementTemplate = exports.templateZip = void 0;
+exports.serializableAssets = exports.createMicroElementTemplate = exports.templateZip = void 0;
 const templateZip = (template, mapping = {}) => {
     const keys = Object.keys(mapping);
     const formatTemplate = template.replace(/\n*/g, '').replace(/[ ]+/g, ' ');
@@ -59,3 +59,13 @@ const createMicroElementTemplate = (microName, options) => {
     });
 };
 exports.createMicroElementTemplate = createMicroElementTemplate;
+const serializableAssets = (entrypoints) => {
+    const staticAssets = { js: [], links: [] };
+    Object.keys(entrypoints).forEach((key) => {
+        const { js = [], css = [] } = entrypoints[key];
+        staticAssets.js.push(...js);
+        staticAssets.links.push(...css);
+    });
+    return staticAssets;
+};
+exports.serializableAssets = serializableAssets;

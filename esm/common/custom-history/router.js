@@ -1,4 +1,4 @@
-import { cloneDeepWith, isBoolean, isFunction } from 'lodash';
+import { cloneDeepWith, isFunction } from 'lodash';
 import { forkJoin, from, isObservable, of } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
 import { serializeRouter } from './serialize-router';
@@ -52,7 +52,7 @@ export class Router {
         return execList.reduce((ob, [routeItem, activate]) => ob.pipe(mergeMap((result) => {
             if (result !== false) {
                 const activeResult = this.injector.get(activate).canActivate(routeInfo, routeItem);
-                return isBoolean(activeResult) ? of(activeResult) : from(activeResult);
+                return this.toObservable(activeResult);
             }
             return of(result);
         })), of(true));
@@ -70,7 +70,7 @@ export class Router {
             if (server && server.resolve) {
                 result = server.resolve(routeInfo, routeItem);
                 if (result && (result.then || isObservable(result))) {
-                    return list.push(from(result).pipe(tap((r) => props[key] = r)));
+                    return list.push(this.toObservable(result).pipe(tap((r) => props[key] = r)));
                 }
             }
             props[key] = result;
@@ -107,5 +107,11 @@ export class Router {
         const routerConfig = this.routerConfig;
         this.routerConfig = Array.isArray(routerConfig) ? routerConfig : [routerConfig];
         this.routerList = serializeRouter(this.routerConfig);
+    }
+    toObservable(result) {
+        if (isObservable(result)) {
+            return result;
+        }
+        return result.then ? from(result) : of(result);
     }
 }

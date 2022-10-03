@@ -15,4 +15,5 @@ export declare class Router {
     private addRouteConfig;
     private getRouteItemByPath;
     private refreshRouterList;
+    private toObservable;
 }
