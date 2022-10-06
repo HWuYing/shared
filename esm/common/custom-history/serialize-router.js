@@ -1,3 +1,4 @@
+import { __rest } from "tslib";
 import { isEmpty } from 'lodash';
 const filterRoute = ({ component, loadModule }) => !!component || !!loadModule;
 export const serializeRouter = (router, parentRouter) => {
@@ -7,7 +8,7 @@ export const serializeRouter = (router, parentRouter) => {
     if (Array.isArray(router)) {
         return serializeRouter({ path: ``, children: router, list: [] });
     }
-    const { children = [], ...routeInfo } = router;
+    const { children = [] } = router, routeInfo = __rest(router, ["children"]);
     const { path = `` } = routeInfo;
     const { path: parentPath = ``, list: parentList = [] } = parentRouter || {};
     const routePath = `${parentPath}/${path}`.replace(/[/]{1,}/ig, '/');

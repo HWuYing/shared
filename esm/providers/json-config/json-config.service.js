@@ -4,9 +4,6 @@ import { cloneDeep } from 'lodash';
 import { map, shareReplay } from 'rxjs/operators';
 import { AppContextService } from '../app-context';
 let JsonConfigService = class JsonConfigService {
-    injector;
-    appContext;
-    cacheConfig;
     constructor(injector) {
         this.injector = injector;
         this.appContext = this.injector.get(AppContextService);

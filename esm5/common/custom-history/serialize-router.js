@@ -1,23 +1,24 @@
+import { __rest, __spreadArray } from "tslib";
 import { isEmpty } from 'lodash';
-const filterRoute = ({ component, loadModule }) => !!component || !!loadModule;
-export const serializeRouter = (router, parentRouter) => {
+var filterRoute = function (_a) {
+    var component = _a.component, loadModule = _a.loadModule;
+    return !!component || !!loadModule;
+};
+export var serializeRouter = function (router, parentRouter) {
     if (isEmpty(router)) {
         return [];
     }
     if (Array.isArray(router)) {
-        return serializeRouter({ path: ``, children: router, list: [] });
+        return serializeRouter({ path: "", children: router, list: [] });
     }
-    const { children = [], ...routeInfo } = router;
-    const { path = `` } = routeInfo;
-    const { path: parentPath = ``, list: parentList = [] } = parentRouter || {};
-    const routePath = `${parentPath}/${path}`.replace(/[/]{1,}/ig, '/');
-    const ComponentList = [routeInfo, ...parentList];
+    var _a = router.children, children = _a === void 0 ? [] : _a, routeInfo = __rest(router, ["children"]);
+    var _b = routeInfo.path, path = _b === void 0 ? "" : _b;
+    var _c = parentRouter || {}, _d = _c.path, parentPath = _d === void 0 ? "" : _d, _e = _c.list, parentList = _e === void 0 ? [] : _e;
+    var routePath = "".concat(parentPath, "/").concat(path).replace(/[/]{1,}/ig, '/');
+    var ComponentList = __spreadArray([routeInfo], parentList, true);
     if (!isEmpty(children)) {
-        return children.reduce((list, r) => [
-            ...list,
-            ...serializeRouter(r, { path: routePath, list: ComponentList })
-        ], []);
+        return children.reduce(function (list, r) { return __spreadArray(__spreadArray([], list, true), serializeRouter(r, { path: routePath, list: ComponentList }), true); }, []);
     }
-    const list = ComponentList.filter(filterRoute);
-    return !list.length ? [] : [{ path: routePath, list }];
+    var list = ComponentList.filter(filterRoute);
+    return !list.length ? [] : [{ path: routePath, list: list }];
 };

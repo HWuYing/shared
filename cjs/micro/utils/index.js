@@ -1,70 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.serializableAssets = exports.createMicroElementTemplate = exports.templateZip = void 0;
-const templateZip = (template, mapping = {}) => {
-    const keys = Object.keys(mapping);
-    const formatTemplate = template.replace(/\n*/g, '').replace(/[ ]+/g, ' ');
-    return keys.reduce((t, key) => t.replace(new RegExp(`\\{${key}\\}`, 'g'), mapping[key]), formatTemplate);
+var templateZip = function (template, mapping) {
+    if (mapping === void 0) { mapping = {}; }
+    var keys = Object.keys(mapping);
+    var formatTemplate = template.replace(/\n*/g, '').replace(/[ ]+/g, ' ');
+    return keys.reduce(function (t, key) { return t.replace(new RegExp("\\{".concat(key, "\\}"), 'g'), mapping[key]); }, formatTemplate);
 };
 exports.templateZip = templateZip;
 // eslint-disable-next-line max-lines-per-function
-const createMicroElementTemplate = (microName, options) => {
-    const { initHtml = '', initStyle = '', linkToStyles = [] } = options;
-    return (0, exports.templateZip)(`
-    (function() {
-      let initStyle = '{initStyle}';
-      let initHtml = '{initHtml}';
-      class Micro${microName}Element extends HTMLElement {
-        constructor() {
-          super();
-          const shadow = this.attachShadow({ mode: 'open' });
-          const head = this.createHead();
-          shadow.appendChild(head);
-          shadow.appendChild(this.createBody());
-          this.appendStyleNode(head);
-          initStyle = '';
-          initHtml = '';
-        }
-
-        createHead() {
-          const head = document.createElement('div');
-          const _appendChild = head.appendChild.bind(head);
-          head.setAttribute('data-app', 'head');
-          head.innerHTML = initStyle;
-          return head;
-        }
-
-        createBody() {
-          const body = document.createElement('div');
-          body.setAttribute('data-app', 'body');
-          body.innerHTML = initHtml;
-          return body;
-        }
-
-        appendStyleNode(container) {
-          const beforeNode = container.firstChild;
-          {linkToStyles}.forEach(function(styleText) {
-            const style = document.createElement('style');
-            style.appendChild(document.createTextNode(styleText));
-            container.insertBefore(style, beforeNode);
-          });
-        }
-      }
-      customElements.define('${microName}-tag', Micro${microName}Element);
-    })();
-  `, {
+var createMicroElementTemplate = function (microName, options) {
+    var _a = options.initHtml, initHtml = _a === void 0 ? '' : _a, _b = options.initStyle, initStyle = _b === void 0 ? '' : _b, _c = options.linkToStyles, linkToStyles = _c === void 0 ? [] : _c;
+    return (0, exports.templateZip)("\n    (function() {\n      let initStyle = '{initStyle}';\n      let initHtml = '{initHtml}';\n      class Micro".concat(microName, "Element extends HTMLElement {\n        constructor() {\n          super();\n          const shadow = this.attachShadow({ mode: 'open' });\n          const head = this.createHead();\n          shadow.appendChild(head);\n          shadow.appendChild(this.createBody());\n          this.appendStyleNode(head);\n          initStyle = '';\n          initHtml = '';\n        }\n\n        createHead() {\n          const head = document.createElement('div');\n          const _appendChild = head.appendChild.bind(head);\n          head.setAttribute('data-app', 'head');\n          head.innerHTML = initStyle;\n          return head;\n        }\n\n        createBody() {\n          const body = document.createElement('div');\n          body.setAttribute('data-app', 'body');\n          body.innerHTML = initHtml;\n          return body;\n        }\n\n        appendStyleNode(container) {\n          const beforeNode = container.firstChild;\n          {linkToStyles}.forEach(function(styleText) {\n            const style = document.createElement('style');\n            style.appendChild(document.createTextNode(styleText));\n            container.insertBefore(style, beforeNode);\n          });\n        }\n      }\n      customElements.define('").concat(microName, "-tag', Micro").concat(microName, "Element);\n    })();\n  "), {
         initStyle: initStyle.replace(/'/g, '\'').replace(/\n/g, ''),
         initHtml: initHtml.replace(/'/g, '\'').replace(/\n/g, ''),
         linkToStyles: JSON.stringify(linkToStyles)
     });
 };
 exports.createMicroElementTemplate = createMicroElementTemplate;
-const serializableAssets = (entrypoints) => {
-    const staticAssets = { js: [], links: [] };
-    Object.keys(entrypoints).forEach((key) => {
-        const { js = [], css = [] } = entrypoints[key];
-        staticAssets.js.push(...js);
-        staticAssets.links.push(...css);
+var serializableAssets = function (entrypoints) {
+    var staticAssets = { js: [], links: [] };
+    Object.keys(entrypoints).forEach(function (key) {
+        var _a, _b;
+        var _c = entrypoints[key], _d = _c.js, js = _d === void 0 ? [] : _d, _e = _c.css, css = _e === void 0 ? [] : _e;
+        (_a = staticAssets.js).push.apply(_a, js);
+        (_b = staticAssets.links).push.apply(_b, css);
     });
     return staticAssets;
 };

@@ -1,48 +1,51 @@
+import { __awaiter } from "tslib";
 import { cloneDeepWith, isFunction } from 'lodash';
 import { forkJoin, from, isObservable, of } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
 import { serializeRouter } from './serialize-router';
 const getRex = () => /^:([^:]+)/g;
 export class Router {
-    injector;
-    routerConfig;
-    routerList = [];
     constructor(injector, routerConfig) {
         this.injector = injector;
         this.routerConfig = routerConfig;
+        this.routerList = [];
         this.refreshRouterList();
     }
-    async getRouterByPath(pathname) {
-        let params = {};
-        const pathList = pathname.split('/');
-        const router = this.routerList.find(({ path }) => {
-            params = {};
-            return !(path?.split('/') || []).some((itemPath, index) => {
-                if (itemPath === '*' || itemPath === pathList[index]) {
-                    return false;
-                }
-                if (getRex().test(itemPath)) {
-                    params[itemPath.replace(getRex(), '$1')] = pathList[index];
-                    return false;
-                }
-                return true;
+    getRouterByPath(pathname) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let params = {};
+            const pathList = pathname.split('/');
+            const router = this.routerList.find(({ path }) => {
+                params = {};
+                return !((path === null || path === void 0 ? void 0 : path.split('/')) || []).some((itemPath, index) => {
+                    if (itemPath === '*' || itemPath === pathList[index]) {
+                        return false;
+                    }
+                    if (getRex().test(itemPath)) {
+                        params[itemPath.replace(getRex(), '$1')] = pathList[index];
+                        return false;
+                    }
+                    return true;
+                });
             });
+            const routeInfo = cloneDeepWith(Object.assign(Object.assign({}, router), { params }), (value) => isFunction(value) ? value : undefined);
+            return this.pathKey(pathname, routeInfo);
         });
-        const routeInfo = cloneDeepWith({ ...router, params }, (value) => isFunction(value) ? value : undefined);
-        return this.pathKey(pathname, routeInfo);
     }
-    async loadModule(routeInfo) {
-        const { list = [] } = routeInfo;
-        const promiseAll = [];
-        list.forEach((routeItem) => {
-            const { loadModule } = routeItem;
-            if (loadModule) {
-                promiseAll.push(loadModule().then((result) => {
-                    Object.assign(routeInfo, { needRefresh: this.addRouteConfig(routeItem, result) });
-                }));
-            }
+    loadModule(routeInfo) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { list = [] } = routeInfo;
+            const promiseAll = [];
+            list.forEach((routeItem) => {
+                const { loadModule } = routeItem;
+                if (loadModule) {
+                    promiseAll.push(loadModule().then((result) => {
+                        Object.assign(routeInfo, { needRefresh: this.addRouteConfig(routeItem, result) });
+                    }));
+                }
+            });
+            return yield Promise.all(promiseAll).then(() => routeInfo.needRefresh);
         });
-        return await Promise.all(promiseAll).then(() => routeInfo.needRefresh);
     }
     canActivate(routeInfo) {
         const execList = this.getExecList(routeInfo, (routeItem) => {

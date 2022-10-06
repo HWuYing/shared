@@ -6,10 +6,9 @@ import { map } from 'rxjs/operators';
 import { ENVIRONMENT } from '../../token';
 export const APP_CONTEXT = InjectorToken.get('APP_CONTEXT');
 let AppContextService = class AppContextService {
-    injector;
-    resourceCache = new Map();
     constructor(injector) {
         this.injector = injector;
+        this.resourceCache = new Map();
     }
     getContext() {
         return this.injector.get(APP_CONTEXT) || {};
