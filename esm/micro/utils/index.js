@@ -54,9 +54,12 @@ export const createMicroElementTemplate = (microName, options) => {
         linkToStyles: JSON.stringify(linkToStyles)
     });
 };
-export const serializableAssets = (entrypoints) => {
+export const serializableAssets = (entrypoints, ignores = []) => {
     const staticAssets = { js: [], links: [] };
     Object.keys(entrypoints).forEach((key) => {
+        if (ignores.includes(key)) {
+            return;
+        }
         const { js = [], css = [] } = entrypoints[key];
         staticAssets.js.push(...js);
         staticAssets.links.push(...css);

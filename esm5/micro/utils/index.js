@@ -13,10 +13,14 @@ export var createMicroElementTemplate = function (microName, options) {
         linkToStyles: JSON.stringify(linkToStyles)
     });
 };
-export var serializableAssets = function (entrypoints) {
+export var serializableAssets = function (entrypoints, ignores) {
+    if (ignores === void 0) { ignores = []; }
     var staticAssets = { js: [], links: [] };
     Object.keys(entrypoints).forEach(function (key) {
         var _a, _b;
+        if (ignores.includes(key)) {
+            return;
+        }
         var _c = entrypoints[key], _d = _c.js, js = _d === void 0 ? [] : _d, _e = _c.css, css = _e === void 0 ? [] : _e;
         (_a = staticAssets.js).push.apply(_a, js);
         (_b = staticAssets.links).push.apply(_b, css);
