@@ -1,24 +1,10 @@
 import { __decorate, __metadata } from "tslib";
 import { Injectable } from '@fm/di';
-import { from, mergeMap } from 'rxjs';
 import { AppContextService } from '../../providers/app-context';
-function factoryRequest(fetch, method) {
-    return (url, params) => from(fetch(url, Object.assign({ method }, params)));
-}
-function createProxy(fetch) {
-    const methods = ['get'];
-    return methods.reduce((proxy, method) => (Object.assign(Object.assign({}, proxy), { [method]: factoryRequest(fetch, method) })), {});
-}
-let HttpClient = class HttpClient {
+import { BaseHttp } from './base-http';
+let HttpClient = class HttpClient extends BaseHttp {
     constructor(appContext) {
-        this.appContext = appContext;
-        this.proxy = createProxy(this.appContext.fetch);
-    }
-    get(req, params) {
-        return this.proxy.get(req, params).pipe(mergeMap((res) => res.json()));
-    }
-    getText(req, params) {
-        return this.proxy.get(req, params).pipe(mergeMap((res) => res.text()));
+        super(appContext.fetch);
     }
 };
 HttpClient = __decorate([
