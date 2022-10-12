@@ -1,4 +1,3 @@
-export * from './custom-history';
-export * from './router';
-export * from './router-intercept.abstract';
-export * from './type-api';
+export { SharedHistory } from './custom-history';
+export { Router } from './router';
+export { AbstractRouterIntercept } from './router-intercept.abstract';

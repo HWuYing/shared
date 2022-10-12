@@ -1,2 +1,2 @@
-export * from './http';
+export { HttpClient } from './http';
 export * from './type-api';

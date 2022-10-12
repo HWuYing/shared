@@ -1,2 +1,2 @@
-export * from './app-context';
-export * from './json-config';
+export { APP_CONTEXT, AppContextService } from './app-context';
+export { JsonConfigService } from './json-config';
