@@ -1,35 +1,16 @@
 import { __decorate, __metadata, __param } from "tslib";
 import { Inject, Injector, InjectorToken } from '@fm/di';
-import { cloneDeep } from 'lodash';
-import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { ENVIRONMENT } from '../../token';
 export var APP_CONTEXT = InjectorToken.get('APP_CONTEXT');
 var AppContextService = /** @class */ (function () {
     function AppContextService(injector) {
         this.injector = injector;
-        this.resourceCache = new Map();
     }
     AppContextService.prototype.getContext = function () {
         return this.injector.get(APP_CONTEXT) || {};
     };
     AppContextService.prototype.getEnvironment = function () {
         return this.injector.get(ENVIRONMENT);
-    };
-    AppContextService.prototype.getResourceCache = function (type) {
-        if (!type || this.resourceCache.has(type)) {
-            return type && this.resourceCache.get(type) || new Map();
-        }
-        var resource = this.getContext().resource;
-        var cacheResource = new Map();
-        Object.keys(resource).forEach(function (key) {
-            var _a = resource[key], source = _a.source, sourceType = _a.type;
-            if (sourceType === type) {
-                cacheResource.set(key, of(source).pipe(map(cloneDeep)));
-            }
-        });
-        this.resourceCache.set(type, cacheResource);
-        return cacheResource;
     };
     Object.defineProperty(AppContextService.prototype, "fetch", {
         get: function () {
