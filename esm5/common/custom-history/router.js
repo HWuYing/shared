@@ -1,9 +1,12 @@
 import { __assign, __awaiter, __generator, __spreadArray } from "tslib";
-import { cloneDeepWith, isFunction } from 'lodash';
+import { cloneDeepWith, isPlainObject } from 'lodash';
 import { forkJoin, from, isObservable, of } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
-import { serializeRouter } from './serialize-router';
+import { addRouterKey, serializeRouter } from './serialize-router';
 var getRex = function () { return /^:([^:]+)/g; };
+function type(obj) {
+    return Object.prototype.toString.call(obj).replace(/\[object (.*)\]/, '$1');
+}
 var Router = /** @class */ (function () {
     function Router(injector, routerConfig) {
         this.injector = injector;
@@ -12,29 +15,24 @@ var Router = /** @class */ (function () {
         this.refreshRouterList();
     }
     Router.prototype.getRouterByPath = function (pathname) {
-        return __awaiter(this, void 0, void 0, function () {
-            var params, pathList, router, routeInfo;
-            return __generator(this, function (_a) {
-                params = {};
-                pathList = pathname.split('/');
-                router = this.routerList.find(function (_a) {
-                    var path = _a.path;
-                    params = {};
-                    return !((path === null || path === void 0 ? void 0 : path.split('/')) || []).some(function (itemPath, index) {
-                        if (itemPath === '*' || itemPath === pathList[index]) {
-                            return false;
-                        }
-                        if (getRex().test(itemPath)) {
-                            params[itemPath.replace(getRex(), '$1')] = pathList[index];
-                            return false;
-                        }
-                        return true;
-                    });
-                });
-                routeInfo = cloneDeepWith(__assign(__assign({}, router), { params: params }), function (value) { return isFunction(value) ? value : undefined; });
-                return [2 /*return*/, this.pathKey(pathname, routeInfo)];
+        var params = {};
+        var pathList = pathname.split('/');
+        var router = this.routerList.find(function (_a) {
+            var path = _a.path;
+            params = {};
+            return !((path === null || path === void 0 ? void 0 : path.split('/')) || []).some(function (itemPath, index) {
+                if (itemPath === '*' || itemPath === pathList[index]) {
+                    return false;
+                }
+                if (getRex().test(itemPath) && pathList.length > index) {
+                    params[itemPath.replace(getRex(), '$1')] = pathList[index];
+                    return false;
+                }
+                return true;
             });
         });
+        var routeInfo = cloneDeepWith(__assign(__assign({}, router), { params: params }), function (obj) { return type(obj) === 'Object' && !isPlainObject(obj) ? obj : undefined; });
+        return this.pathKey(pathname, routeInfo);
     };
     Router.prototype.loadModule = function (routeInfo) {
         return __awaiter(this, void 0, void 0, function () {
@@ -53,7 +51,7 @@ var Router = /** @class */ (function () {
                                 }));
                             }
                         });
-                        return [4 /*yield*/, Promise.all(promiseAll).then(function () { return routeInfo.needRefresh; })];
+                        return [4 /*yield*/, Promise.all(promiseAll).then(function () { return !!routeInfo.needRefresh; })];
                     case 1: return [2 /*return*/, _b.sent()];
                 }
             });
@@ -68,8 +66,9 @@ var Router = /** @class */ (function () {
         return execList.reduce(function (ob, _a) {
             var routeItem = _a[0], activate = _a[1];
             return ob.pipe(mergeMap(function (result) {
-                if (result !== false) {
-                    var activeResult = _this.injector.get(activate).canActivate(routeInfo, routeItem);
+                var service = _this.injector.get(activate);
+                if (result !== false && service) {
+                    var activeResult = service.canActivate(routeInfo, routeItem);
                     return _this.toObservable(activeResult);
                 }
                 return of(result);
@@ -113,24 +112,26 @@ var Router = /** @class */ (function () {
     };
     Router.prototype.addRouteConfig = function (routeItem, result) {
         var _a = result.children, children = _a === void 0 ? [] : _a;
-        var routeConfig = this.getRouteItemByPath(this.routerConfig, routeItem.path);
-        var needRefresh = children.length;
+        var routeConfig = this.getRouteItemByPath(this.routerConfig, routeItem.flag);
         delete routeItem.loadModule;
         delete routeConfig.loadModule;
         Object.assign(routeConfig, result);
-        needRefresh ? this.refreshRouterList() : Object.assign(routeItem, result);
-        return needRefresh;
+        this.refreshRouterList();
+        return children.length;
     };
-    Router.prototype.getRouteItemByPath = function (routerConfig, path) {
-        var _this = this;
-        return routerConfig.find(function (_a) {
-            var _path = _a.path, children = _a.children;
-            return _path === path || children && _this.getRouteItemByPath(children, path);
-        });
+    Router.prototype.getRouteItemByPath = function (routerConfig, flag) {
+        var item;
+        for (var i = 0; i < routerConfig.length; i++) {
+            item = routerConfig[i];
+            if (item.flag === flag || (item = this.getRouteItemByPath(item.children || [], flag))) {
+                return item;
+            }
+        }
     };
     Router.prototype.refreshRouterList = function () {
         var routerConfig = this.routerConfig;
         this.routerConfig = Array.isArray(routerConfig) ? routerConfig : [routerConfig];
+        addRouterKey(this.routerConfig);
         this.routerList = serializeRouter(this.routerConfig);
     };
     Router.prototype.toObservable = function (result) {

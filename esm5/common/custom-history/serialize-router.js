@@ -4,6 +4,16 @@ var filterRoute = function (_a) {
     var component = _a.component, loadModule = _a.loadModule;
     return !!component || !!loadModule;
 };
+export var addRouterKey = function (router, flag) {
+    if (flag === void 0) { flag = 'root'; }
+    if (!Array.isArray(router)) {
+        return addRouterKey([router], flag);
+    }
+    router.forEach(function (item, index) {
+        item.flag = "".concat(flag, "-").concat(index);
+        item.children && addRouterKey(item.children, item.flag);
+    });
+};
 export var serializeRouter = function (router, parentRouter) {
     if (isEmpty(router)) {
         return [];

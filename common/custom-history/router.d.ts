@@ -6,8 +6,10 @@ export declare class Router {
     private routerConfig;
     private routerList;
     constructor(injector: Injector, routerConfig: any);
-    getRouterByPath(pathname: string): Promise<RouteInfo>;
-    loadModule(routeInfo: RouteInfo): Promise<boolean>;
+    getRouterByPath(pathname: string): RouteInfo;
+    loadModule(routeInfo: RouteInfo & {
+        needRefresh?: boolean;
+    }): Promise<boolean>;
     canActivate(routeInfo: RouteInfo): Observable<boolean>;
     loadResolve(routeInfo: RouteInfo): Observable<any>;
     private pathKey;

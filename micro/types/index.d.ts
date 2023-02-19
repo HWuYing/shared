@@ -1,7 +1,7 @@
 import { Observable, Subject } from 'rxjs';
 export interface MicroStoreInterface {
-    onMounted(container: HTMLElement, options?: any): void;
-    unMounted(container: HTMLElement): void;
+    onMounted(container: HTMLElement, options?: any): Promise<void>;
+    unMounted(container: HTMLElement): Promise<void>;
 }
 export interface SharedDataInterface {
     set(key: string, value: any): void;

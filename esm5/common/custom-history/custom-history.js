@@ -1,24 +1,36 @@
-import { __awaiter, __decorate, __generator, __metadata, __param } from "tslib";
-import { Inject, Injectable, Injector } from '@fm/di';
+import { __awaiter, __decorate, __generator, __metadata } from "tslib";
+import { Injectable, Injector } from '@fm/di';
 import { parsePath } from 'history';
 import { lastValueFrom, Subject } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
-import { HISTORY, ROUTER_CONFIG, ROUTER_INTERCEPT } from '../../token';
+import { HISTORY, ROUTER_CONFIG } from '../../token';
 import { Router } from './router';
-import { AbstractRouterIntercept } from './router-intercept.abstract';
 var SharedHistory = /** @class */ (function () {
-    function SharedHistory(injector, intercept) {
+    function SharedHistory(injector) {
         this.injector = injector;
-        this.intercept = intercept;
         this.activeRoute = new Subject().pipe(shareReplay(1));
+        this.pushRoute = new Subject();
+        this.cancelRoute = new Subject();
         this.history = this.injector.get(HISTORY);
         this.router = new Router(injector, this.injector.get(ROUTER_CONFIG));
-        this.history.listen(this.listener.bind(this));
+        this.unListen = this.history.listen(this.listener.bind(this));
     }
+    SharedHistory.prototype.loadRouter = function (url) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.pushRoute.next(url);
+                return [2 /*return*/, this.resolveIntercept(parsePath(url))];
+            });
+        });
+    };
     SharedHistory.prototype.navigateTo = function (url) {
         var _this = this;
-        var location = parsePath(url);
-        this.resolveIntercept(location).then(function (status) { return status && _this.history.push(url); });
+        this.loadRouter(url).then(function (status) { return status && _this.history.push(url); });
+    };
+    SharedHistory.prototype.redirect = function (url) {
+        var _this = this;
+        var isServer = typeof window === 'undefined';
+        isServer ? this.history.replace(url) : this.loadRouter(url).then(function (status) { return status && _this.history.replace(url); });
     };
     SharedHistory.prototype.resolve = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -43,6 +55,12 @@ var SharedHistory = /** @class */ (function () {
             });
         });
     };
+    SharedHistory.prototype.destory = function () {
+        this.unListen();
+        this.activeRoute.unsubscribe();
+        this.pushRoute.unsubscribe();
+        this.cancelRoute.unsubscribe();
+    };
     Object.defineProperty(SharedHistory.prototype, "currentRouteInfo", {
         get: function () {
             return this._routeInfo || { path: null, params: {}, query: {}, list: [] };
@@ -52,18 +70,20 @@ var SharedHistory = /** @class */ (function () {
     });
     SharedHistory.prototype.listener = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var location, routeInfo, needResove;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!this.intercept) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.intercept.resolve(this.currentRouteInfo)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2: return [4 /*yield*/, lastValueFrom(this.router.loadResolve(this.currentRouteInfo))];
+                        location = this.history.location;
+                        routeInfo = this.createRouteInfo(location);
+                        needResove = routeInfo.list.some(function (routeItem) { return routeItem.loadModule; });
+                        if (!needResove) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.resolve()];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2: return [4 /*yield*/, lastValueFrom(this.router.loadResolve(routeInfo))];
                     case 3:
                         _a.sent();
-                        this.activeRoute.next(this.currentRouteInfo);
+                        this.activeRoute.next(this._routeInfo = routeInfo);
                         return [2 /*return*/];
                 }
             });
@@ -71,30 +91,32 @@ var SharedHistory = /** @class */ (function () {
     };
     SharedHistory.prototype.resolveIntercept = function (location) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, pathname, query, _b, params, _c, list, status;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var routeInfo, status;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _a = this.parse(location), pathname = _a[0], query = _a[1];
-                        return [4 /*yield*/, this.router.getRouterByPath(pathname)];
+                        routeInfo = this.createRouteInfo(location);
+                        return [4 /*yield*/, lastValueFrom(this.router.canActivate(routeInfo))];
                     case 1:
-                        _b = _d.sent(), params = _b.params, _c = _b.list, list = _c === void 0 ? [] : _c;
-                        this._routeInfo = { path: pathname, query: query, params: params, list: list };
-                        return [4 /*yield*/, lastValueFrom(this.router.canActivate(this.currentRouteInfo))];
-                    case 2:
-                        status = _d.sent();
-                        if (!!status) return [3 /*break*/, 3];
-                        this._routeInfo.list = [];
-                        return [3 /*break*/, 6];
-                    case 3: return [4 /*yield*/, this.router.loadModule(this.currentRouteInfo)];
-                    case 4:
-                        if (!_d.sent()) return [3 /*break*/, 6];
+                        status = _a.sent();
+                        if (!!status) return [3 /*break*/, 2];
+                        routeInfo.list = [];
+                        this.cancelRoute.next(routeInfo);
+                        return [3 /*break*/, 5];
+                    case 2: return [4 /*yield*/, this.router.loadModule(routeInfo)];
+                    case 3:
+                        if (!_a.sent()) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.resolveIntercept(location)];
-                    case 5: return [2 /*return*/, _d.sent()];
-                    case 6: return [2 /*return*/, status];
+                    case 4: return [2 /*return*/, _a.sent()];
+                    case 5: return [2 /*return*/, status];
                 }
             });
         });
+    };
+    SharedHistory.prototype.createRouteInfo = function (location) {
+        var _a = this.parse(location), pathname = _a[0], query = _a[1];
+        var _b = this.router.getRouterByPath(pathname), params = _b.params, _c = _b.list, list = _c === void 0 ? [] : _c;
+        return { path: pathname, query: query, params: params, list: list };
     };
     SharedHistory.prototype.parse = function (location) {
         var pathname = location.pathname, _a = location.search, search = _a === void 0 ? '' : _a;
@@ -102,7 +124,7 @@ var SharedHistory = /** @class */ (function () {
     };
     SharedHistory.prototype.parseSearch = function (search) {
         var query = {};
-        (search.match(/[^&]/ig) || []).forEach(function (item) {
+        (search.match(/[^&]+/ig) || []).forEach(function (item) {
             var _a = item.split('='), name = _a[0], value = _a[1];
             query[name] = value;
         });
@@ -110,8 +132,7 @@ var SharedHistory = /** @class */ (function () {
     };
     SharedHistory = __decorate([
         Injectable(),
-        __param(1, Inject(ROUTER_INTERCEPT)),
-        __metadata("design:paramtypes", [Injector, AbstractRouterIntercept])
+        __metadata("design:paramtypes", [Injector])
     ], SharedHistory);
     return SharedHistory;
 }());

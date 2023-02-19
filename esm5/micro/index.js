@@ -1,1 +1,1 @@
-export { templateZip, createMicroElementTemplate, serializableAssets } from './utils';
+export { createMicroElementTemplate, serializableAssets, templateZip } from './utils';

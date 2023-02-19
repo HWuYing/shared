@@ -1,12 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.serializeRouter = void 0;
+exports.serializeRouter = exports.addRouterKey = void 0;
 var tslib_1 = require("tslib");
 var lodash_1 = require("lodash");
 var filterRoute = function (_a) {
     var component = _a.component, loadModule = _a.loadModule;
     return !!component || !!loadModule;
 };
+var addRouterKey = function (router, flag) {
+    if (flag === void 0) { flag = 'root'; }
+    if (!Array.isArray(router)) {
+        return (0, exports.addRouterKey)([router], flag);
+    }
+    router.forEach(function (item, index) {
+        item.flag = "".concat(flag, "-").concat(index);
+        item.children && (0, exports.addRouterKey)(item.children, item.flag);
+    });
+};
+exports.addRouterKey = addRouterKey;
 var serializeRouter = function (router, parentRouter) {
     if ((0, lodash_1.isEmpty)(router)) {
         return [];

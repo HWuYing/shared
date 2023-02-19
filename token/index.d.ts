@@ -4,4 +4,4 @@ export declare const HISTORY: InjectorToken;
 export declare const MICRO_OPTIONS: InjectorToken;
 export declare const APP_INITIALIZER: InjectorToken;
 export declare const ROUTER_CONFIG: InjectorToken;
-export declare const ROUTER_INTERCEPT: InjectorToken;
+export declare const PLATFORM: InjectorToken;

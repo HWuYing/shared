@@ -1,0 +1,33 @@
+import { __decorate, __metadata } from "tslib";
+import { Injectable } from '@fm/di';
+import { mergeMap } from 'rxjs';
+import { RequestMethod } from './consts';
+import { HttpHandler } from "./http-handler";
+let HttpClient = class HttpClient {
+    constructor(handler) {
+        this.handler = handler;
+    }
+    request(method, req, params) {
+        return this.handler.handle(req, Object.assign({ method }, params));
+    }
+    get(req, params) {
+        return this.request(RequestMethod.GET, req, params).pipe(mergeMap((res) => res.json()));
+    }
+    getText(req, params) {
+        return this.request(RequestMethod.GET, req, params).pipe(mergeMap((res) => res.text()));
+    }
+    post(req, params) {
+        return this.request(RequestMethod.POST, req, params).pipe(mergeMap((res) => res.json()));
+    }
+    put(req, params) {
+        return this.request(RequestMethod.PUT, req, params).pipe(mergeMap((res) => res.json()));
+    }
+    delete(req, params) {
+        return this.request(RequestMethod.DELETE, req, params).pipe(mergeMap((res) => res.json()));
+    }
+};
+HttpClient = __decorate([
+    Injectable(),
+    __metadata("design:paramtypes", [HttpHandler])
+], HttpClient);
+export { HttpClient };

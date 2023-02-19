@@ -120,6 +120,18 @@
 			"es2015": "./esm/providers/json-config/*.js",
 			"default": "./esm5/providers/json-config/*.js"
 		},
+		"./providers/platform": {
+			"node": "./cjs/providers/platform/index.js",
+			"require": "./cjs/providers/platform/index.js",
+			"es2015": "./esm/providers/platform/index.js",
+			"default": "./esm5/providers/platform/index.js"
+		},
+		"./providers/platform/*": {
+			"node": "./cjs/providers/platform/*.js",
+			"require": "./cjs/providers/platform/*.js",
+			"es2015": "./esm/providers/platform/*.js",
+			"default": "./esm5/providers/platform/*.js"
+		},
 		"./token": {
 			"node": "./cjs/token/index.js",
 			"require": "./cjs/token/index.js",

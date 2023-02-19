@@ -1,9 +1,12 @@
 import { __awaiter } from "tslib";
-import { cloneDeepWith, isFunction } from 'lodash';
+import { cloneDeepWith, isPlainObject } from 'lodash';
 import { forkJoin, from, isObservable, of } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
-import { serializeRouter } from './serialize-router';
+import { addRouterKey, serializeRouter } from './serialize-router';
 const getRex = () => /^:([^:]+)/g;
+function type(obj) {
+    return Object.prototype.toString.call(obj).replace(/\[object (.*)\]/, '$1');
+}
 export class Router {
     constructor(injector, routerConfig) {
         this.injector = injector;
@@ -12,25 +15,23 @@ export class Router {
         this.refreshRouterList();
     }
     getRouterByPath(pathname) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let params = {};
-            const pathList = pathname.split('/');
-            const router = this.routerList.find(({ path }) => {
-                params = {};
-                return !((path === null || path === void 0 ? void 0 : path.split('/')) || []).some((itemPath, index) => {
-                    if (itemPath === '*' || itemPath === pathList[index]) {
-                        return false;
-                    }
-                    if (getRex().test(itemPath)) {
-                        params[itemPath.replace(getRex(), '$1')] = pathList[index];
-                        return false;
-                    }
-                    return true;
-                });
+        let params = {};
+        const pathList = pathname.split('/');
+        const router = this.routerList.find(({ path }) => {
+            params = {};
+            return !((path === null || path === void 0 ? void 0 : path.split('/')) || []).some((itemPath, index) => {
+                if (itemPath === '*' || itemPath === pathList[index]) {
+                    return false;
+                }
+                if (getRex().test(itemPath) && pathList.length > index) {
+                    params[itemPath.replace(getRex(), '$1')] = pathList[index];
+                    return false;
+                }
+                return true;
             });
-            const routeInfo = cloneDeepWith(Object.assign(Object.assign({}, router), { params }), (value) => isFunction(value) ? value : undefined);
-            return this.pathKey(pathname, routeInfo);
         });
+        const routeInfo = cloneDeepWith(Object.assign(Object.assign({}, router), { params }), (obj) => type(obj) === 'Object' && !isPlainObject(obj) ? obj : undefined);
+        return this.pathKey(pathname, routeInfo);
     }
     loadModule(routeInfo) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -44,7 +45,7 @@ export class Router {
                     }));
                 }
             });
-            return yield Promise.all(promiseAll).then(() => routeInfo.needRefresh);
+            return yield Promise.all(promiseAll).then(() => !!routeInfo.needRefresh);
         });
     }
     canActivate(routeInfo) {
@@ -53,8 +54,9 @@ export class Router {
             return canActivate.map((item) => [routeItem, item]);
         });
         return execList.reduce((ob, [routeItem, activate]) => ob.pipe(mergeMap((result) => {
-            if (result !== false) {
-                const activeResult = this.injector.get(activate).canActivate(routeInfo, routeItem);
+            const service = this.injector.get(activate);
+            if (result !== false && service) {
+                const activeResult = service.canActivate(routeInfo, routeItem);
                 return this.toObservable(activeResult);
             }
             return of(result);
@@ -95,20 +97,26 @@ export class Router {
     }
     addRouteConfig(routeItem, result) {
         const { children = [] } = result;
-        const routeConfig = this.getRouteItemByPath(this.routerConfig, routeItem.path);
-        const needRefresh = children.length;
+        const routeConfig = this.getRouteItemByPath(this.routerConfig, routeItem.flag);
         delete routeItem.loadModule;
         delete routeConfig.loadModule;
         Object.assign(routeConfig, result);
-        needRefresh ? this.refreshRouterList() : Object.assign(routeItem, result);
-        return needRefresh;
+        this.refreshRouterList();
+        return children.length;
     }
-    getRouteItemByPath(routerConfig, path) {
-        return routerConfig.find(({ path: _path, children }) => _path === path || children && this.getRouteItemByPath(children, path));
+    getRouteItemByPath(routerConfig, flag) {
+        let item;
+        for (let i = 0; i < routerConfig.length; i++) {
+            item = routerConfig[i];
+            if (item.flag === flag || (item = this.getRouteItemByPath(item.children || [], flag))) {
+                return item;
+            }
+        }
     }
     refreshRouterList() {
         const routerConfig = this.routerConfig;
         this.routerConfig = Array.isArray(routerConfig) ? routerConfig : [routerConfig];
+        addRouterKey(this.routerConfig);
         this.routerList = serializeRouter(this.routerConfig);
     }
     toObservable(result) {
