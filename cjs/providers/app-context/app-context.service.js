@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppContextService = exports.APP_CONTEXT = void 0;
 var tslib_1 = require("tslib");
 var di_1 = require("@fm/di");
-var token_1 = require("../../token");
 exports.APP_CONTEXT = di_1.InjectorToken.get('APP_CONTEXT');
 var AppContextService = /** @class */ (function () {
     function AppContextService(injector) {
@@ -11,9 +10,6 @@ var AppContextService = /** @class */ (function () {
     }
     AppContextService.prototype.getContext = function () {
         return this.injector.get(exports.APP_CONTEXT) || {};
-    };
-    AppContextService.prototype.getEnvironment = function () {
-        return this.injector.get(token_1.ENVIRONMENT);
     };
     Object.defineProperty(AppContextService.prototype, "fetch", {
         get: function () {

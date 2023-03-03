@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpInterceptingHandler = exports.HttpHandler = exports.HttpClient = exports.HTTP_INTERCEPTORS = exports.createResponse = exports.SharedHistory = exports.MockHistory = void 0;
+exports.HttpInterceptingHandler = exports.HttpHandler = exports.HttpClient = exports.HTTP_INTERCEPTORS = exports.createResponse = exports.SharedHistory = void 0;
 var custom_history_1 = require("./custom-history");
-Object.defineProperty(exports, "MockHistory", { enumerable: true, get: function () { return custom_history_1.MockHistory; } });
 Object.defineProperty(exports, "SharedHistory", { enumerable: true, get: function () { return custom_history_1.SharedHistory; } });
 var http_1 = require("./http");
 Object.defineProperty(exports, "createResponse", { enumerable: true, get: function () { return http_1.createResponse; } });

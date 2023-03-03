@@ -1,6 +1,5 @@
 import { __decorate, __metadata, __param } from "tslib";
 import { Inject, Injector, InjectorToken } from '@fm/di';
-import { ENVIRONMENT } from '../../token';
 export var APP_CONTEXT = InjectorToken.get('APP_CONTEXT');
 var AppContextService = /** @class */ (function () {
     function AppContextService(injector) {
@@ -8,9 +7,6 @@ var AppContextService = /** @class */ (function () {
     }
     AppContextService.prototype.getContext = function () {
         return this.injector.get(APP_CONTEXT) || {};
-    };
-    AppContextService.prototype.getEnvironment = function () {
-        return this.injector.get(ENVIRONMENT);
     };
     Object.defineProperty(AppContextService.prototype, "fetch", {
         get: function () {
