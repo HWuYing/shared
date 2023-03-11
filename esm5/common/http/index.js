@@ -3,6 +3,7 @@ import { Injectable, Injector, InjectorToken } from '@fm/di';
 import { HttpFetchHandler } from './http-fetch-handler';
 import { HttpInterceptHandler } from './http-intercept-handler';
 export { HttpClient } from './http-client';
+export { HttpFetchHandler } from './http-fetch-handler';
 export { HttpHandler } from './http-handler';
 export { createResponse } from './util';
 export var HTTP_INTERCEPTORS = InjectorToken.get('HTTP_INTERCEPTORS');

@@ -7,7 +7,7 @@ let HttpFetchHandler = class HttpFetchHandler {
         this.fetch = appContext.fetch;
     }
     handle(req, params) {
-        return from(this.fetch(req, params));
+        return from((typeof fetch !== 'undefined' ? fetch : this.fetch)(req, params));
     }
 };
 HttpFetchHandler = __decorate([

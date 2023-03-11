@@ -7,7 +7,7 @@ var HttpFetchHandler = /** @class */ (function () {
         this.fetch = appContext.fetch;
     }
     HttpFetchHandler.prototype.handle = function (req, params) {
-        return from(this.fetch(req, params));
+        return from((typeof fetch !== 'undefined' ? fetch : this.fetch)(req, params));
     };
     HttpFetchHandler = __decorate([
         Injectable(),

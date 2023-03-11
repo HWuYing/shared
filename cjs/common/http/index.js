@@ -1,12 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpInterceptingHandler = exports.HTTP_INTERCEPTORS = exports.createResponse = exports.HttpHandler = exports.HttpClient = void 0;
+exports.HttpInterceptingHandler = exports.HTTP_INTERCEPTORS = exports.createResponse = exports.HttpHandler = exports.HttpFetchHandler = exports.HttpClient = void 0;
 var tslib_1 = require("tslib");
 var di_1 = require("@fm/di");
 var http_fetch_handler_1 = require("./http-fetch-handler");
 var http_intercept_handler_1 = require("./http-intercept-handler");
 var http_client_1 = require("./http-client");
 Object.defineProperty(exports, "HttpClient", { enumerable: true, get: function () { return http_client_1.HttpClient; } });
+var http_fetch_handler_2 = require("./http-fetch-handler");
+Object.defineProperty(exports, "HttpFetchHandler", { enumerable: true, get: function () { return http_fetch_handler_2.HttpFetchHandler; } });
 var http_handler_1 = require("./http-handler");
 Object.defineProperty(exports, "HttpHandler", { enumerable: true, get: function () { return http_handler_1.HttpHandler; } });
 var util_1 = require("./util");

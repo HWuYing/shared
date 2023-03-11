@@ -10,7 +10,7 @@ var HttpFetchHandler = /** @class */ (function () {
         this.fetch = appContext.fetch;
     }
     HttpFetchHandler.prototype.handle = function (req, params) {
-        return (0, rxjs_1.from)(this.fetch(req, params));
+        return (0, rxjs_1.from)((typeof fetch !== 'undefined' ? fetch : this.fetch)(req, params));
     };
     HttpFetchHandler = tslib_1.__decorate([
         (0, di_1.Injectable)(),
