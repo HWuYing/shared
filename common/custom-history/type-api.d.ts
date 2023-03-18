@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-export declare type RouteItem = {
+export type RouteItem = {
     canActivate?: CanActivate[];
     resolve?: {
         [key: string]: any;

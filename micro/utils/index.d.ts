@@ -1,4 +1,4 @@
-export declare type Entrypoints = {
+export type Entrypoints = {
     [key: string]: {
         js: string[];
         css: string[];
