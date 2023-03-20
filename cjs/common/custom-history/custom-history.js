@@ -58,7 +58,7 @@ var SharedHistory = /** @class */ (function () {
             });
         });
     };
-    SharedHistory.prototype.destory = function () {
+    SharedHistory.prototype.destroy = function () {
         this.unListen();
         this.activeRoute.unsubscribe();
         this.pushRoute.unsubscribe();

@@ -1,5 +1,5 @@
 {
-	"name": "@fm/shared",
+	"name": "@fm/core",
 	"version": "1.0.0",
 	"description": "",
 	"main": "./cjs/index.js",

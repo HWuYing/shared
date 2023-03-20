@@ -1,33 +1,37 @@
 import { __rest } from "tslib";
 import { isEmpty } from 'lodash';
 const filterRoute = ({ component, loadModule }) => !!component || !!loadModule;
+const toArray = (obj) => Array.isArray(obj) ? obj : [obj];
+function stackFunction(stackArray) {
+    const stack = stackArray;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return { add: (obj) => stack.push(obj), run: (handler) => { while (stack.length)
+            handler(stack.shift()); } };
+}
 export const addRouterKey = (router, flag = 'root') => {
-    if (!Array.isArray(router)) {
-        return addRouterKey([router], flag);
-    }
-    router.forEach((item, index) => {
-        item.flag = `${flag}-${index}`;
-        item.children && addRouterKey(item.children, item.flag);
+    const stack = stackFunction(toArray(router).map((r, index) => ({ router: r, flag: `${flag}-${index}` })));
+    stack.run(({ router: stackRouter, flag: staciFlag }) => {
+        const { children } = stackRouter;
+        stackRouter.flag = staciFlag;
+        if (!isEmpty(children)) {
+            children.forEach((r, index) => stack.add({ router: r, flag: `${flag}-${index}` }));
+        }
     });
 };
 export const serializeRouter = (router, parentRouter) => {
-    if (isEmpty(router)) {
-        return [];
-    }
-    if (Array.isArray(router)) {
-        return serializeRouter({ path: ``, children: router, list: [] });
-    }
-    const { children = [] } = router, routeInfo = __rest(router, ["children"]);
-    const { path = `` } = routeInfo;
-    const { path: parentPath = ``, list: parentList = [] } = parentRouter || {};
-    const routePath = `${parentPath}/${path}`.replace(/[/]{1,}/ig, '/');
-    const ComponentList = [routeInfo, ...parentList];
-    if (!isEmpty(children)) {
-        return children.reduce((list, r) => [
-            ...list,
-            ...serializeRouter(r, { path: routePath, list: ComponentList })
-        ], []);
-    }
-    const list = ComponentList.filter(filterRoute);
-    return !list.length ? [] : [{ path: routePath, list }];
+    const stack = stackFunction(toArray(router).map((r) => ({ router: r, parentRouter })));
+    const routerInfoList = [];
+    stack.run(({ router: stackRouter, parentRouter: stackParentRouter = {} }) => {
+        const { children = [] } = stackRouter, routeInfo = __rest(stackRouter, ["children"]);
+        const { path: parentPath = ``, list: parentList = [] } = stackParentRouter;
+        const routePath = `${parentPath}/${routeInfo.path || ''}`.replace(/[/]{1,}/ig, '/');
+        const list = [routeInfo, ...parentList].filter(filterRoute);
+        if (!isEmpty(children)) {
+            children.forEach((r) => stack.add({ router: r, parentRouter: { path: routePath, list } }));
+        }
+        else if (list.length) {
+            routerInfoList.push({ path: routePath, list });
+        }
+    });
+    return routerInfoList;
 };

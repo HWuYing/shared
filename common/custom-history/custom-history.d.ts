@@ -15,7 +15,7 @@ export declare class SharedHistory {
     navigateTo(url: string): void;
     redirect(url: string): void;
     resolve(): Promise<void>;
-    destory(): void;
+    destroy(): void;
     get currentRouteInfo(): RouteInfo;
     private listener;
     private resolveIntercept;

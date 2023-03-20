@@ -35,7 +35,7 @@ let SharedHistory = class SharedHistory {
             status && (yield this.listener());
         });
     }
-    destory() {
+    destroy() {
         this.unListen();
         this.activeRoute.unsubscribe();
         this.pushRoute.unsubscribe();
