@@ -5,8 +5,8 @@ import { lastValueFrom, Subject } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { HISTORY, ROUTER_CONFIG } from '../../token';
 import { Router } from './router';
-var SharedHistory = /** @class */ (function () {
-    function SharedHistory(injector) {
+var CustomHistory = /** @class */ (function () {
+    function CustomHistory(injector) {
         this.injector = injector;
         this.activeRoute = new Subject().pipe(shareReplay(1));
         this.pushRoute = new Subject();
@@ -15,7 +15,7 @@ var SharedHistory = /** @class */ (function () {
         this.router = new Router(injector, this.injector.get(ROUTER_CONFIG));
         this.unListen = this.history.listen(this.listener.bind(this));
     }
-    SharedHistory.prototype.loadRouter = function (url) {
+    CustomHistory.prototype.loadRouter = function (url) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 this.pushRoute.next(url);
@@ -23,16 +23,16 @@ var SharedHistory = /** @class */ (function () {
             });
         });
     };
-    SharedHistory.prototype.navigateTo = function (url) {
+    CustomHistory.prototype.navigateTo = function (url) {
         var _this = this;
         this.loadRouter(url).then(function (status) { return status && _this.history.push(url); });
     };
-    SharedHistory.prototype.redirect = function (url) {
+    CustomHistory.prototype.redirect = function (url) {
         var _this = this;
         var isServer = typeof window === 'undefined';
         isServer ? this.history.replace(url) : this.loadRouter(url).then(function (status) { return status && _this.history.replace(url); });
     };
-    SharedHistory.prototype.resolve = function () {
+    CustomHistory.prototype.resolve = function () {
         return __awaiter(this, void 0, void 0, function () {
             var location, status, _a;
             return __generator(this, function (_b) {
@@ -55,20 +55,20 @@ var SharedHistory = /** @class */ (function () {
             });
         });
     };
-    SharedHistory.prototype.destroy = function () {
+    CustomHistory.prototype.destroy = function () {
         this.unListen();
         this.activeRoute.unsubscribe();
         this.pushRoute.unsubscribe();
         this.cancelRoute.unsubscribe();
     };
-    Object.defineProperty(SharedHistory.prototype, "currentRouteInfo", {
+    Object.defineProperty(CustomHistory.prototype, "currentRouteInfo", {
         get: function () {
             return this._routeInfo || { path: null, params: {}, query: {}, list: [] };
         },
         enumerable: false,
         configurable: true
     });
-    SharedHistory.prototype.listener = function () {
+    CustomHistory.prototype.listener = function () {
         return __awaiter(this, void 0, void 0, function () {
             var location, routeInfo, needResove;
             return __generator(this, function (_a) {
@@ -89,7 +89,7 @@ var SharedHistory = /** @class */ (function () {
             });
         });
     };
-    SharedHistory.prototype.resolveIntercept = function (location) {
+    CustomHistory.prototype.resolveIntercept = function (location) {
         return __awaiter(this, void 0, void 0, function () {
             var routeInfo, status;
             return __generator(this, function (_a) {
@@ -113,16 +113,16 @@ var SharedHistory = /** @class */ (function () {
             });
         });
     };
-    SharedHistory.prototype.createRouteInfo = function (location) {
+    CustomHistory.prototype.createRouteInfo = function (location) {
         var _a = this.parse(location), pathname = _a[0], query = _a[1];
         var _b = this.router.getRouterByPath(pathname), params = _b.params, _c = _b.list, list = _c === void 0 ? [] : _c;
         return { path: pathname, query: query, params: params, list: list };
     };
-    SharedHistory.prototype.parse = function (location) {
+    CustomHistory.prototype.parse = function (location) {
         var pathname = location.pathname, _a = location.search, search = _a === void 0 ? '' : _a;
         return ["/".concat(pathname).replace('//', '/'), this.parseSearch(search.replace(/^\?/, ''))];
     };
-    SharedHistory.prototype.parseSearch = function (search) {
+    CustomHistory.prototype.parseSearch = function (search) {
         var query = {};
         (search.match(/[^&]+/ig) || []).forEach(function (item) {
             var _a = item.split('='), name = _a[0], value = _a[1];
@@ -130,10 +130,10 @@ var SharedHistory = /** @class */ (function () {
         });
         return query;
     };
-    SharedHistory = __decorate([
+    CustomHistory = __decorate([
         Injectable(),
         __metadata("design:paramtypes", [Injector])
-    ], SharedHistory);
-    return SharedHistory;
+    ], CustomHistory);
+    return CustomHistory;
 }());
-export { SharedHistory };
+export { CustomHistory };

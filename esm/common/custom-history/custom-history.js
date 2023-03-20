@@ -5,7 +5,7 @@ import { lastValueFrom, Subject } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { HISTORY, ROUTER_CONFIG } from '../../token';
 import { Router } from './router';
-let SharedHistory = class SharedHistory {
+let CustomHistory = class CustomHistory {
     constructor(injector) {
         this.injector = injector;
         this.activeRoute = new Subject().pipe(shareReplay(1));
@@ -87,8 +87,8 @@ let SharedHistory = class SharedHistory {
         return query;
     }
 };
-SharedHistory = __decorate([
+CustomHistory = __decorate([
     Injectable(),
     __metadata("design:paramtypes", [Injector])
-], SharedHistory);
-export { SharedHistory };
+], CustomHistory);
+export { CustomHistory };

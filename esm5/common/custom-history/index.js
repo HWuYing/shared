@@ -1,2 +1,2 @@
-export { SharedHistory } from './custom-history';
+export { CustomHistory } from './custom-history';
 export { Router } from './router';

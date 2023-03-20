@@ -1,4 +1,4 @@
-export { SharedHistory } from './common/custom-history';
+export { CustomHistory } from './common/custom-history';
 export type { CanActivate, Resolve, ResolveData, RouteInfo } from './common/custom-history/type-api';
 export type { Fetch, HttpInterceptor } from './common/http';
 export { createResponse, HTTP_INTERCEPTORS, HttpClient, HttpFetchHandler, HttpHandler, HttpInterceptingHandler } from './common/http';

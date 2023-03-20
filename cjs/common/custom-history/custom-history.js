@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SharedHistory = void 0;
+exports.CustomHistory = void 0;
 var tslib_1 = require("tslib");
 var di_1 = require("@fm/di");
 var history_1 = require("history");
@@ -8,8 +8,8 @@ var rxjs_1 = require("rxjs");
 var operators_1 = require("rxjs/operators");
 var token_1 = require("../../token");
 var router_1 = require("./router");
-var SharedHistory = /** @class */ (function () {
-    function SharedHistory(injector) {
+var CustomHistory = /** @class */ (function () {
+    function CustomHistory(injector) {
         this.injector = injector;
         this.activeRoute = new rxjs_1.Subject().pipe((0, operators_1.shareReplay)(1));
         this.pushRoute = new rxjs_1.Subject();
@@ -18,7 +18,7 @@ var SharedHistory = /** @class */ (function () {
         this.router = new router_1.Router(injector, this.injector.get(token_1.ROUTER_CONFIG));
         this.unListen = this.history.listen(this.listener.bind(this));
     }
-    SharedHistory.prototype.loadRouter = function (url) {
+    CustomHistory.prototype.loadRouter = function (url) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 this.pushRoute.next(url);
@@ -26,16 +26,16 @@ var SharedHistory = /** @class */ (function () {
             });
         });
     };
-    SharedHistory.prototype.navigateTo = function (url) {
+    CustomHistory.prototype.navigateTo = function (url) {
         var _this = this;
         this.loadRouter(url).then(function (status) { return status && _this.history.push(url); });
     };
-    SharedHistory.prototype.redirect = function (url) {
+    CustomHistory.prototype.redirect = function (url) {
         var _this = this;
         var isServer = typeof window === 'undefined';
         isServer ? this.history.replace(url) : this.loadRouter(url).then(function (status) { return status && _this.history.replace(url); });
     };
-    SharedHistory.prototype.resolve = function () {
+    CustomHistory.prototype.resolve = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var location, status, _a;
             return tslib_1.__generator(this, function (_b) {
@@ -58,20 +58,20 @@ var SharedHistory = /** @class */ (function () {
             });
         });
     };
-    SharedHistory.prototype.destroy = function () {
+    CustomHistory.prototype.destroy = function () {
         this.unListen();
         this.activeRoute.unsubscribe();
         this.pushRoute.unsubscribe();
         this.cancelRoute.unsubscribe();
     };
-    Object.defineProperty(SharedHistory.prototype, "currentRouteInfo", {
+    Object.defineProperty(CustomHistory.prototype, "currentRouteInfo", {
         get: function () {
             return this._routeInfo || { path: null, params: {}, query: {}, list: [] };
         },
         enumerable: false,
         configurable: true
     });
-    SharedHistory.prototype.listener = function () {
+    CustomHistory.prototype.listener = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var location, routeInfo, needResove;
             return tslib_1.__generator(this, function (_a) {
@@ -92,7 +92,7 @@ var SharedHistory = /** @class */ (function () {
             });
         });
     };
-    SharedHistory.prototype.resolveIntercept = function (location) {
+    CustomHistory.prototype.resolveIntercept = function (location) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var routeInfo, status;
             return tslib_1.__generator(this, function (_a) {
@@ -116,16 +116,16 @@ var SharedHistory = /** @class */ (function () {
             });
         });
     };
-    SharedHistory.prototype.createRouteInfo = function (location) {
+    CustomHistory.prototype.createRouteInfo = function (location) {
         var _a = this.parse(location), pathname = _a[0], query = _a[1];
         var _b = this.router.getRouterByPath(pathname), params = _b.params, _c = _b.list, list = _c === void 0 ? [] : _c;
         return { path: pathname, query: query, params: params, list: list };
     };
-    SharedHistory.prototype.parse = function (location) {
+    CustomHistory.prototype.parse = function (location) {
         var pathname = location.pathname, _a = location.search, search = _a === void 0 ? '' : _a;
         return ["/".concat(pathname).replace('//', '/'), this.parseSearch(search.replace(/^\?/, ''))];
     };
-    SharedHistory.prototype.parseSearch = function (search) {
+    CustomHistory.prototype.parseSearch = function (search) {
         var query = {};
         (search.match(/[^&]+/ig) || []).forEach(function (item) {
             var _a = item.split('='), name = _a[0], value = _a[1];
@@ -133,10 +133,10 @@ var SharedHistory = /** @class */ (function () {
         });
         return query;
     };
-    SharedHistory = tslib_1.__decorate([
+    CustomHistory = tslib_1.__decorate([
         (0, di_1.Injectable)(),
         tslib_1.__metadata("design:paramtypes", [di_1.Injector])
-    ], SharedHistory);
-    return SharedHistory;
+    ], CustomHistory);
+    return CustomHistory;
 }());
-exports.SharedHistory = SharedHistory;
+exports.CustomHistory = CustomHistory;

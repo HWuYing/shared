@@ -1,7 +1,7 @@
 import { Injector } from '@fm/di';
 import { Subject } from 'rxjs';
 import { RouteInfo } from './type-api';
-export declare class SharedHistory {
+export declare class CustomHistory {
     private injector;
     private router;
     private history;
