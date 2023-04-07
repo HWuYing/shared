@@ -1,8 +1,8 @@
 import { Injector, InjectorToken } from '@fm/di';
 import { PLATFORM } from '../../token';
 export var PlatformOptions = InjectorToken.get('PlatformOptions');
-export { APPLICATION_METDATA, APPLICATION_TOKEN, ApplicationContext, PLATFORM_SCOPE } from './application';
-export function createPlafformFactory(createPlatform) {
+export { APPLICATION_METADATA, APPLICATION_TOKEN, ApplicationContext, PLATFORM_SCOPE } from './application';
+export function createPlatformFactory(createPlatform) {
     var providers = [];
     for (var _i = 1; _i < arguments.length; _i++) {
         providers[_i - 1] = arguments[_i];

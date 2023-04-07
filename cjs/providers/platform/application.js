@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ApplicationContext = exports.APPLICATION_METDATA = exports.APPLICATION_TOKEN = exports.PLATFORM_SCOPE = void 0;
+exports.ApplicationContext = exports.APPLICATION_METADATA = exports.APPLICATION_TOKEN = exports.PLATFORM_SCOPE = void 0;
 var tslib_1 = require("tslib");
 // eslint-disable-next-line max-len
 var di_1 = require("@fm/di");
@@ -10,7 +10,7 @@ var APPLICATION = 'Application';
 var DELETE_TOKEN = di_1.InjectorToken.get('DELETE_TOKEN');
 exports.PLATFORM_SCOPE = 'platform';
 exports.APPLICATION_TOKEN = di_1.InjectorToken.get('APPLICATION_TOKEN');
-exports.APPLICATION_METDATA = di_1.InjectorToken.get('APPLICATION_METDATA');
+exports.APPLICATION_METADATA = di_1.InjectorToken.get('APPLICATION_METADATA');
 var ApplicationContext = /** @class */ (function () {
     function ApplicationContext(_platformProviders, _providers) {
         if (_platformProviders === void 0) { _platformProviders = []; }
@@ -55,19 +55,19 @@ var ApplicationContext = /** @class */ (function () {
         this._platformProviders.push(provider);
         this.setDynamicProvider(provider, true);
     };
-    ApplicationContext.prototype.registryApp = function (app, metadata) {
+    ApplicationContext.prototype.registerApp = function (app, metadata) {
         if (metadata === void 0) { metadata = {}; }
         this.addProvider({ provide: exports.APPLICATION_TOKEN, useExisting: app });
-        this.addPlatformProvider({ provide: exports.APPLICATION_METDATA, useFactory: function () { return (0, utility_1.cloneDeepPlain)(metadata); } });
+        this.addPlatformProvider({ provide: exports.APPLICATION_METADATA, useFactory: function () { return (0, utility_1.cloneDeepPlain)(metadata); } });
         (0, di_1.Injectable)(metadata)(app);
         this.runStart();
     };
-    ApplicationContext.prototype.regeditStart = function (runStart) {
+    ApplicationContext.prototype.registerStart = function (runStart) {
         this.runStart = runStart;
     };
     ApplicationContext.prototype.makeApplicationDecorator = function () {
         var _this = this;
-        return (0, di_1.makeDecorator)(APPLICATION, undefined, function (injectableType, metadata) { return _this.registryApp(injectableType, metadata); });
+        return (0, di_1.makeDecorator)(APPLICATION, undefined, function (injectableType, metadata) { return _this.registerApp(injectableType, metadata); });
     };
     ApplicationContext.prototype.makeProvDecorator = function (name) {
         var _this = this;
@@ -88,7 +88,7 @@ var ApplicationContext = /** @class */ (function () {
         var _this = this;
         var typeFn = function (target, prop, key) {
             var useFactory = function (metadata) { return (0, lodash_1.get)(metadata, key); };
-            _this.addProvider({ provide: target.__prop__metadata__[prop][0], useFactory: useFactory, deps: [exports.APPLICATION_METDATA] });
+            _this.addProvider({ provide: target.__prop__metadata__[prop][0], useFactory: useFactory, deps: [exports.APPLICATION_METADATA] });
         };
         return (0, di_1.makePropDecorator)(name, function (key) { return ({ key: key }); }, typeFn);
     };

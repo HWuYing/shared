@@ -7,7 +7,7 @@ const APPLICATION = 'Application';
 const DELETE_TOKEN = InjectorToken.get('DELETE_TOKEN');
 export const PLATFORM_SCOPE = 'platform';
 export const APPLICATION_TOKEN = InjectorToken.get('APPLICATION_TOKEN');
-export const APPLICATION_METDATA = InjectorToken.get('APPLICATION_METDATA');
+export const APPLICATION_METADATA = InjectorToken.get('APPLICATION_METADATA');
 export class ApplicationContext {
     constructor(_platformProviders = [], _providers = []) {
         this._platformProviders = _platformProviders;
@@ -48,17 +48,17 @@ export class ApplicationContext {
         this._platformProviders.push(provider);
         this.setDynamicProvider(provider, true);
     }
-    registryApp(app, metadata = {}) {
+    registerApp(app, metadata = {}) {
         this.addProvider({ provide: APPLICATION_TOKEN, useExisting: app });
-        this.addPlatformProvider({ provide: APPLICATION_METDATA, useFactory: () => cloneDeepPlain(metadata) });
+        this.addPlatformProvider({ provide: APPLICATION_METADATA, useFactory: () => cloneDeepPlain(metadata) });
         Injectable(metadata)(app);
         this.runStart();
     }
-    regeditStart(runStart) {
+    registerStart(runStart) {
         this.runStart = runStart;
     }
     makeApplicationDecorator() {
-        return makeDecorator(APPLICATION, undefined, (injectableType, metadata) => this.registryApp(injectableType, metadata));
+        return makeDecorator(APPLICATION, undefined, (injectableType, metadata) => this.registerApp(injectableType, metadata));
     }
     makeProvDecorator(name) {
         const typeFn = (type, method, descriptor, ...meta) => {
@@ -73,7 +73,7 @@ export class ApplicationContext {
     makePropInput(name) {
         const typeFn = (target, prop, key) => {
             const useFactory = (metadata) => get(metadata, key);
-            this.addProvider({ provide: target.__prop__metadata__[prop][0], useFactory, deps: [APPLICATION_METDATA] });
+            this.addProvider({ provide: target.__prop__metadata__[prop][0], useFactory, deps: [APPLICATION_METADATA] });
         };
         return makePropDecorator(name, (key) => ({ key }), typeFn);
     }

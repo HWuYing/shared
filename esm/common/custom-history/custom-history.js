@@ -48,8 +48,8 @@ let CustomHistory = class CustomHistory {
         return __awaiter(this, void 0, void 0, function* () {
             const { location } = this.history;
             const routeInfo = this.createRouteInfo(location);
-            const needResove = routeInfo.list.some((routeItem) => routeItem.loadModule);
-            if (needResove)
+            const needResolve = routeInfo.list.some((routeItem) => routeItem.loadModule);
+            if (needResolve)
                 return yield this.resolve();
             yield lastValueFrom(this.router.loadResolve(routeInfo));
             this.activeRoute.next(this._routeInfo = routeInfo);

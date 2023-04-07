@@ -1,7 +1,7 @@
 import { InjectorToken, Provider, TokenKey, Type } from '@fm/di';
 export declare const PLATFORM_SCOPE = "platform";
 export declare const APPLICATION_TOKEN: InjectorToken;
-export declare const APPLICATION_METDATA: InjectorToken;
+export declare const APPLICATION_METADATA: InjectorToken;
 type ProvDecorator = (token: TokenKey, provider?: {
     providedIn?: string;
     [key: string]: any;
@@ -18,8 +18,8 @@ export declare class ApplicationContext {
     private setDynamicProvider;
     private addProvider;
     private addPlatformProvider;
-    private registryApp;
-    regeditStart(runStart: () => any): void;
+    private registerApp;
+    registerStart(runStart: () => any): void;
     makeApplicationDecorator(): (this: unknown, ...args: any[]) => (cls: Type<any>) => any;
     makeProvDecorator(name: string): ProvDecorator;
     makePropInput(name: string): (key: string) => any;

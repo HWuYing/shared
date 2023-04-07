@@ -73,14 +73,14 @@ var CustomHistory = /** @class */ (function () {
     });
     CustomHistory.prototype.listener = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var location, routeInfo, needResove;
+            var location, routeInfo, needResolve;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         location = this.history.location;
                         routeInfo = this.createRouteInfo(location);
-                        needResove = routeInfo.list.some(function (routeItem) { return routeItem.loadModule; });
-                        if (!needResove) return [3 /*break*/, 2];
+                        needResolve = routeInfo.list.some(function (routeItem) { return routeItem.loadModule; });
+                        if (!needResolve) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.resolve()];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2: return [4 /*yield*/, (0, rxjs_1.lastValueFrom)(this.router.loadResolve(routeInfo))];
