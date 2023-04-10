@@ -1,6 +1,6 @@
 import { InjectorToken, Provider, TokenKey, Type } from '@fm/di';
 type MetadataProps = {
-    [key: string]: Record<string, any>;
+    [key: string]: any;
 };
 export declare const PLATFORM_SCOPE = "platform";
 export declare const APPLICATION_TOKEN: InjectorToken;
