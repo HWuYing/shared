@@ -12,7 +12,7 @@ type ProvDecorator = (token: TokenKey, provider?: {
     providedIn?: string;
     [key: string]: any;
 }) => any;
-type ApplicationDecorator = <M extends MetadataInfo>(metadata: Type<M> | MetadataProps) => <T = any>(cls: Type<T>) => Type<T>;
+type ApplicationDecorator = <M extends MetadataInfo>(metadata?: Type<M> | MetadataProps) => <T = any>(cls: Type<T>) => Type<T>;
 export declare class ApplicationContext {
     private _platformProviders;
     private _providers;
