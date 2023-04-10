@@ -1,4 +1,4 @@
-import { __assign, __rest } from "tslib";
+import { __assign, __awaiter, __generator, __rest } from "tslib";
 // eslint-disable-next-line max-len
 import { Injectable, Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, makeMethodDecorator, makePropDecorator, ROOT_SCOPE } from '@fm/di';
 import { get } from 'lodash';
@@ -16,7 +16,7 @@ var ApplicationContext = /** @class */ (function () {
         this._providers = _providers;
         this.dynamicInjectors = [];
         this.addDefaultProvider(_providers, ROOT_SCOPE);
-        this.addDefaultProvider(_platformProviders, PLATFORM_SCOPE);
+        this.addDefaultProvider([_platformProviders, { provide: ApplicationContext, useValue: this }], PLATFORM_SCOPE);
     }
     ApplicationContext.prototype.addDefaultProvider = function (providers, scope) {
         var _this = this;
@@ -52,11 +52,40 @@ var ApplicationContext = /** @class */ (function () {
         this._platformProviders.push(provider);
         this.setDynamicProvider(provider, true);
     };
-    ApplicationContext.prototype.registerApp = function (app, metadata) {
+    ApplicationContext.prototype.getApp = function (injector, app, metadata) {
+        var _a;
         if (metadata === void 0) { metadata = {}; }
-        this.addProvider({ provide: APPLICATION_TOKEN, useExisting: app });
-        this.addPlatformProvider({ provide: APPLICATION_METADATA, useFactory: function () { return cloneDeepPlain(metadata); } });
-        Injectable(metadata)(app);
+        return __awaiter(this, void 0, void 0, function () {
+            var isProvide, _metadata, _b, factor;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        isProvide = typeof metadata === 'function' || metadata instanceof InjectorToken;
+                        if (!isProvide) return [3 /*break*/, 2];
+                        return [4 /*yield*/, Promise.resolve(((_a = injector.get(metadata)) === null || _a === void 0 ? void 0 : _a.load()) || {})];
+                    case 1:
+                        _b = _c.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        _b = metadata;
+                        _c.label = 3;
+                    case 3:
+                        _metadata = _b;
+                        factor = function () { return cloneDeepPlain(_metadata); };
+                        this.addProvider({ provide: APPLICATION_METADATA, useFactory: factor });
+                        return [2 /*return*/, injector.get(app)];
+                }
+            });
+        });
+    };
+    ApplicationContext.prototype.registerApp = function (app, metadata) {
+        var _this = this;
+        if (metadata === void 0) { metadata = {}; }
+        var appFactory = function (injector) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/, this.getApp(injector, app, metadata)];
+        }); }); };
+        this.addProvider({ provide: APPLICATION_TOKEN, useFactory: appFactory, deps: [Injector] });
+        Injectable()(app);
         this.runStart();
     };
     ApplicationContext.prototype.registerStart = function (runStart) {

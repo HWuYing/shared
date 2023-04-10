@@ -5,4 +5,5 @@ export { createResponse, HTTP_INTERCEPTORS, HttpClient, HttpFetchHandler, HttpHa
 export { createMicroElementTemplate, serializableAssets, templateZip } from './micro/utils';
 export { APP_CONTEXT, AppContextService } from './providers/app-context';
 export { JsonConfigService } from './providers/json-config';
+export type { MetadataInfo } from './providers/platform/application';
 export * from './token';

@@ -1,4 +1,4 @@
-import { __rest } from "tslib";
+import { __awaiter, __rest } from "tslib";
 // eslint-disable-next-line max-len
 import { Injectable, Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, makeMethodDecorator, makePropDecorator, ROOT_SCOPE } from '@fm/di';
 import { get } from 'lodash';
@@ -14,7 +14,7 @@ export class ApplicationContext {
         this._providers = _providers;
         this.dynamicInjectors = [];
         this.addDefaultProvider(_providers, ROOT_SCOPE);
-        this.addDefaultProvider(_platformProviders, PLATFORM_SCOPE);
+        this.addDefaultProvider([_platformProviders, { provide: ApplicationContext, useValue: this }], PLATFORM_SCOPE);
     }
     addDefaultProvider(providers, scope) {
         const initFactory = (injector) => (this.addInjector(injector), scope);
@@ -48,10 +48,20 @@ export class ApplicationContext {
         this._platformProviders.push(provider);
         this.setDynamicProvider(provider, true);
     }
+    getApp(injector, app, metadata = {}) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const isProvide = typeof metadata === 'function' || metadata instanceof InjectorToken;
+            const _metadata = isProvide ? yield Promise.resolve(((_a = injector.get(metadata)) === null || _a === void 0 ? void 0 : _a.load()) || {}) : metadata;
+            const factor = () => cloneDeepPlain(_metadata);
+            this.addProvider({ provide: APPLICATION_METADATA, useFactory: factor });
+            return injector.get(app);
+        });
+    }
     registerApp(app, metadata = {}) {
-        this.addProvider({ provide: APPLICATION_TOKEN, useExisting: app });
-        this.addPlatformProvider({ provide: APPLICATION_METADATA, useFactory: () => cloneDeepPlain(metadata) });
-        Injectable(metadata)(app);
+        const appFactory = (injector) => __awaiter(this, void 0, void 0, function* () { return this.getApp(injector, app, metadata); });
+        this.addProvider({ provide: APPLICATION_TOKEN, useFactory: appFactory, deps: [Injector] });
+        Injectable()(app);
         this.runStart();
     }
     registerStart(runStart) {
