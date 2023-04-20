@@ -12,14 +12,12 @@ exports.PLATFORM_SCOPE = 'platform';
 exports.APPLICATION_TOKEN = di_1.InjectorToken.get('APPLICATION_TOKEN');
 exports.APPLICATION_METADATA = di_1.InjectorToken.get('APPLICATION_METADATA');
 var ApplicationContext = /** @class */ (function () {
-    function ApplicationContext(_platformProviders, _providers) {
-        if (_platformProviders === void 0) { _platformProviders = []; }
-        if (_providers === void 0) { _providers = []; }
-        this._platformProviders = _platformProviders;
-        this._providers = _providers;
+    function ApplicationContext(_platformProv, _prov) {
+        if (_platformProv === void 0) { _platformProv = []; }
+        if (_prov === void 0) { _prov = []; }
         this.dynamicInjectors = [];
-        this.addDefaultProvider(_providers, di_1.ROOT_SCOPE);
-        this.addDefaultProvider([_platformProviders, { provide: ApplicationContext, useValue: this }], exports.PLATFORM_SCOPE);
+        this._providers = this.addDefaultProvider([_prov], di_1.ROOT_SCOPE);
+        this._platformProviders = this.addDefaultProvider([_platformProv, { provide: ApplicationContext, useValue: this }], exports.PLATFORM_SCOPE);
     }
     ApplicationContext.prototype.addDefaultProvider = function (providers, scope) {
         var _this = this;
@@ -29,6 +27,7 @@ var ApplicationContext = /** @class */ (function () {
             { provide: DELETE_TOKEN, useFactory: deleteFactory, deps: [di_1.Injector] },
             { provide: di_1.INJECTOR_SCOPE, useFactory: initFactory, deps: [di_1.Injector, DELETE_TOKEN] }
         ]);
+        return providers;
     };
     ApplicationContext.prototype.addInjector = function (injector) {
         this.dynamicInjectors.push(injector);
@@ -38,7 +37,7 @@ var ApplicationContext = /** @class */ (function () {
         if (indexOf !== -1)
             this.dynamicInjectors.splice(indexOf, 1);
     };
-    ApplicationContext.prototype.setDynamicProvider = function (provider, isPlatform) {
+    ApplicationContext.prototype.setDynamicProv = function (provider, isPlatform) {
         if (isPlatform === void 0) { isPlatform = false; }
         var provide = provider.provide;
         this.dynamicInjectors.forEach(function (injector) {
@@ -49,17 +48,17 @@ var ApplicationContext = /** @class */ (function () {
     };
     ApplicationContext.prototype.addProvider = function (provider) {
         this._providers.push(provider);
-        this.setDynamicProvider(provider);
+        this.setDynamicProv(provider);
     };
     ApplicationContext.prototype.addPlatformProvider = function (provider) {
         this._platformProviders.push(provider);
-        this.setDynamicProvider(provider, true);
+        this.setDynamicProv(provider, true);
     };
     ApplicationContext.prototype.getApp = function (injector, app, metadata) {
         var _a;
         if (metadata === void 0) { metadata = {}; }
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var isProvide, _metadata, _b, factor;
+            var isProvide, _metadata, _b;
             return tslib_1.__generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -74,9 +73,9 @@ var ApplicationContext = /** @class */ (function () {
                         _c.label = 3;
                     case 3:
                         _metadata = _b;
-                        factor = function () { return (0, utility_1.cloneDeepPlain)(_metadata); };
-                        this.addProvider({ provide: exports.APPLICATION_METADATA, useFactory: factor });
-                        return [2 /*return*/, injector.get(app)];
+                        injector.set(exports.APPLICATION_METADATA, { provide: exports.APPLICATION_METADATA, useFactory: function () { return (0, utility_1.cloneDeepPlain)(_metadata); } });
+                        injector.set(exports.APPLICATION_TOKEN, { provide: exports.APPLICATION_TOKEN, useValue: injector.get(app) });
+                        return [2 /*return*/, injector.get(exports.APPLICATION_TOKEN)];
                 }
             });
         });
@@ -88,7 +87,7 @@ var ApplicationContext = /** @class */ (function () {
             return [2 /*return*/, this.getApp(injector, app, metadata)];
         }); }); };
         this.addProvider({ provide: exports.APPLICATION_TOKEN, useFactory: appFactory, deps: [di_1.Injector] });
-        (0, di_1.Injectable)()(app);
+        (0, di_1.setInjectableDef)(app);
         this.runStart();
     };
     ApplicationContext.prototype.registerStart = function (runStart) {
@@ -117,7 +116,8 @@ var ApplicationContext = /** @class */ (function () {
         var _this = this;
         var typeFn = function (target, prop, key) {
             var useFactory = function (metadata) { return (0, lodash_1.get)(metadata, key); };
-            _this.addProvider({ provide: target.__prop__metadata__[prop][0], useFactory: useFactory, deps: [exports.APPLICATION_METADATA] });
+            var provide = di_1.reflectCapabilities.getPropAnnotations(target, prop)[0];
+            _this.addProvider({ provide: provide, useFactory: useFactory, deps: [exports.APPLICATION_METADATA] });
         };
         return (0, di_1.makePropDecorator)(name, function (key) { return ({ key: key }); }, typeFn);
     };

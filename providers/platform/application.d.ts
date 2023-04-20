@@ -14,15 +14,15 @@ type ProvDecorator = (token: TokenKey, provider?: {
 }) => any;
 type ApplicationDecorator = <M extends MetadataInfo>(metadata?: Type<M> | MetadataProps) => <T = any>(cls: Type<T>) => Type<T>;
 export declare class ApplicationContext {
-    private _platformProviders;
-    private _providers;
     private runStart;
     private dynamicInjectors;
-    constructor(_platformProviders?: Provider[], _providers?: Provider[]);
+    private _providers;
+    private _platformProviders;
+    constructor(_platformProv?: Provider[], _prov?: Provider[]);
     private addDefaultProvider;
     private addInjector;
     private deleteInjector;
-    private setDynamicProvider;
+    private setDynamicProv;
     private addProvider;
     private addPlatformProvider;
     private getApp;
