@@ -1,7 +1,5 @@
-import { Injector, InjectorToken } from '@fm/di';
-import { PLATFORM } from '../../token';
-export const PlatformOptions = InjectorToken.get('PlatformOptions');
-export { APPLICATION_METADATA, APPLICATION_TOKEN, ApplicationContext, PLATFORM_SCOPE } from './application';
+import { Injector } from '@fm/di';
+import { PLATFORM } from '../token';
 export function createPlatformFactory(createPlatform, ...providers) {
     return (appContext, ...extraProviders) => {
         const injectorProviders = providers.concat(extraProviders);

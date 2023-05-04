@@ -1,8 +1,9 @@
-import { Injector, InjectorToken } from '@fm/di';
-import { PLATFORM } from '../../token';
-export var PlatformOptions = InjectorToken.get('PlatformOptions');
-export { APPLICATION_METADATA, APPLICATION_TOKEN, ApplicationContext, PLATFORM_SCOPE } from './application';
-export function createPlatformFactory(createPlatform) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.createPlatformFactory = void 0;
+var di_1 = require("@fm/di");
+var token_1 = require("../token");
+function createPlatformFactory(createPlatform) {
     var providers = [];
     for (var _i = 1; _i < arguments.length; _i++) {
         providers[_i - 1] = arguments[_i];
@@ -15,8 +16,9 @@ export function createPlatformFactory(createPlatform) {
         var injectorProviders = providers.concat(extraProviders);
         if (!createPlatform) {
             injectorProviders.push(appContext.platformProviders);
-            return Injector.create(injectorProviders).get(PLATFORM);
+            return di_1.Injector.create(injectorProviders).get(token_1.PLATFORM);
         }
         return createPlatform(appContext, injectorProviders);
     };
 }
+exports.createPlatformFactory = createPlatformFactory;

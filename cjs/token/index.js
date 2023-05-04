@@ -1,9 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PLATFORM = exports.ROUTER_CONFIG = exports.APP_INITIALIZER = exports.MICRO_OPTIONS = exports.HISTORY = void 0;
+exports.PlatformOptions = exports.PLATFORM = exports.ROUTER_CONFIG = exports.APP_INITIALIZER = exports.MICRO_OPTIONS = exports.HISTORY = exports.APPLICATION_METADATA = exports.APPLICATION_TOKEN = exports.HTTP_INTERCEPTORS = void 0;
 var di_1 = require("@fm/di");
+exports.HTTP_INTERCEPTORS = di_1.InjectorToken.get('HTTP_INTERCEPTORS');
+exports.APPLICATION_TOKEN = di_1.InjectorToken.get('APPLICATION_TOKEN');
+exports.APPLICATION_METADATA = di_1.InjectorToken.get('APPLICATION_METADATA');
 exports.HISTORY = di_1.InjectorToken.get('HISTORY');
 exports.MICRO_OPTIONS = di_1.InjectorToken.get('MICRO_MANAGER');
 exports.APP_INITIALIZER = di_1.InjectorToken.get('APP_INITIALIZER');
 exports.ROUTER_CONFIG = di_1.InjectorToken.get('ROUTER_CONFIG');
 exports.PLATFORM = di_1.InjectorToken.get('PLATFORM');
+exports.PlatformOptions = di_1.InjectorToken.get('PlatformOptions');

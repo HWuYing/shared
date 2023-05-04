@@ -1,16 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ApplicationContext = exports.APPLICATION_METADATA = exports.APPLICATION_TOKEN = exports.PLATFORM_SCOPE = void 0;
+exports.ApplicationContext = exports.PLATFORM_SCOPE = void 0;
 var tslib_1 = require("tslib");
 // eslint-disable-next-line max-len
 var di_1 = require("@fm/di");
 var lodash_1 = require("lodash");
-var utility_1 = require("../../utility");
+var token_1 = require("../token");
+var utility_1 = require("../utility");
 var APPLICATION = 'Application';
 var DELETE_TOKEN = di_1.InjectorToken.get('DELETE_TOKEN');
 exports.PLATFORM_SCOPE = 'platform';
-exports.APPLICATION_TOKEN = di_1.InjectorToken.get('APPLICATION_TOKEN');
-exports.APPLICATION_METADATA = di_1.InjectorToken.get('APPLICATION_METADATA');
 var ApplicationContext = /** @class */ (function () {
     function ApplicationContext(_platformProv, _prov) {
         if (_platformProv === void 0) { _platformProv = []; }
@@ -73,9 +72,9 @@ var ApplicationContext = /** @class */ (function () {
                         _c.label = 3;
                     case 3:
                         _metadata = _b;
-                        injector.set(exports.APPLICATION_METADATA, { provide: exports.APPLICATION_METADATA, useFactory: function () { return (0, utility_1.cloneDeepPlain)(_metadata); } });
-                        injector.set(exports.APPLICATION_TOKEN, { provide: exports.APPLICATION_TOKEN, useValue: injector.get(app) });
-                        return [2 /*return*/, injector.get(exports.APPLICATION_TOKEN)];
+                        injector.set(token_1.APPLICATION_METADATA, { provide: token_1.APPLICATION_METADATA, useFactory: function () { return (0, utility_1.cloneDeepPlain)(_metadata); } });
+                        injector.set(token_1.APPLICATION_TOKEN, { provide: token_1.APPLICATION_TOKEN, useValue: injector.get(app) });
+                        return [2 /*return*/, injector.get(token_1.APPLICATION_TOKEN)];
                 }
             });
         });
@@ -86,7 +85,7 @@ var ApplicationContext = /** @class */ (function () {
         var appFactory = function (injector) { return tslib_1.__awaiter(_this, void 0, void 0, function () { return tslib_1.__generator(this, function (_a) {
             return [2 /*return*/, this.getApp(injector, app, metadata)];
         }); }); };
-        this.addProvider({ provide: exports.APPLICATION_TOKEN, useFactory: appFactory, deps: [di_1.Injector] });
+        this.addProvider({ provide: token_1.APPLICATION_TOKEN, useFactory: appFactory, deps: [di_1.Injector] });
         (0, di_1.setInjectableDef)(app);
         this.runStart();
     };
@@ -117,7 +116,7 @@ var ApplicationContext = /** @class */ (function () {
         var typeFn = function (target, prop, key) {
             var useFactory = function (metadata) { return (0, lodash_1.get)(metadata, key); };
             var provide = di_1.reflectCapabilities.getPropAnnotations(target, prop)[0];
-            _this.addProvider({ provide: provide, useFactory: useFactory, deps: [exports.APPLICATION_METADATA] });
+            _this.addProvider({ provide: provide, useFactory: useFactory, deps: [token_1.APPLICATION_METADATA] });
         };
         return (0, di_1.makePropDecorator)(name, function (key) { return ({ key: key }); }, typeFn);
     };

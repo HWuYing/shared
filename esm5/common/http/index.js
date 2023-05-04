@@ -1,12 +1,12 @@
 import { __decorate, __metadata } from "tslib";
-import { Injectable, Injector, InjectorToken } from '@fm/di';
+import { Injectable, Injector } from '@fm/di';
+import { HTTP_INTERCEPTORS } from '../../token';
 import { HttpFetchHandler } from './http-fetch-handler';
 import { HttpInterceptHandler } from './http-intercept-handler';
 export { HttpClient } from './http-client';
 export { HttpFetchHandler } from './http-fetch-handler';
 export { HttpHandler } from './http-handler';
 export { createResponse } from './util';
-export var HTTP_INTERCEPTORS = InjectorToken.get('HTTP_INTERCEPTORS');
 var HttpInterceptingHandler = /** @class */ (function () {
     function HttpInterceptingHandler(fetchHandler, injector) {
         this.fetchHandler = fetchHandler;

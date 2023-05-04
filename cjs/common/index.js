@@ -1,11 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpInterceptingHandler = exports.HttpHandler = exports.HttpClient = exports.HTTP_INTERCEPTORS = exports.createResponse = exports.CustomHistory = void 0;
+exports.HttpInterceptingHandler = exports.HttpHandler = exports.HttpClient = exports.createResponse = exports.CustomHistory = void 0;
 var custom_history_1 = require("./custom-history");
 Object.defineProperty(exports, "CustomHistory", { enumerable: true, get: function () { return custom_history_1.CustomHistory; } });
 var http_1 = require("./http");
 Object.defineProperty(exports, "createResponse", { enumerable: true, get: function () { return http_1.createResponse; } });
-Object.defineProperty(exports, "HTTP_INTERCEPTORS", { enumerable: true, get: function () { return http_1.HTTP_INTERCEPTORS; } });
 Object.defineProperty(exports, "HttpClient", { enumerable: true, get: function () { return http_1.HttpClient; } });
 Object.defineProperty(exports, "HttpHandler", { enumerable: true, get: function () { return http_1.HttpHandler; } });
 Object.defineProperty(exports, "HttpInterceptingHandler", { enumerable: true, get: function () { return http_1.HttpInterceptingHandler; } });

@@ -1,4 +1,4 @@
-import { Injector, InjectorToken } from '@fm/di';
+import { Injector } from '@fm/di';
 import { Observable } from 'rxjs';
 import { HttpFetchHandler } from './http-fetch-handler';
 import { HttpHandler } from './http-handler';
@@ -7,7 +7,6 @@ export { HttpFetchHandler } from './http-fetch-handler';
 export { HttpHandler } from './http-handler';
 export type { Fetch, HttpInterceptor } from './type-api';
 export { createResponse } from './util';
-export declare const HTTP_INTERCEPTORS: InjectorToken;
 export declare class HttpInterceptingHandler implements HttpHandler {
     private fetchHandler;
     private injector;

@@ -1,6 +1,10 @@
 import { InjectorToken } from '@fm/di';
+export const HTTP_INTERCEPTORS = InjectorToken.get('HTTP_INTERCEPTORS');
+export const APPLICATION_TOKEN = InjectorToken.get('APPLICATION_TOKEN');
+export const APPLICATION_METADATA = InjectorToken.get('APPLICATION_METADATA');
 export const HISTORY = InjectorToken.get('HISTORY');
 export const MICRO_OPTIONS = InjectorToken.get('MICRO_MANAGER');
 export const APP_INITIALIZER = InjectorToken.get('APP_INITIALIZER');
 export const ROUTER_CONFIG = InjectorToken.get('ROUTER_CONFIG');
 export const PLATFORM = InjectorToken.get('PLATFORM');
+export const PlatformOptions = InjectorToken.get('PlatformOptions');

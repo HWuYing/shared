@@ -1,12 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JsonConfigService = exports.AppContextService = exports.APP_CONTEXT = exports.templateZip = exports.serializableAssets = exports.createMicroElementTemplate = exports.HttpInterceptingHandler = exports.HttpHandler = exports.HttpFetchHandler = exports.HttpClient = exports.HTTP_INTERCEPTORS = exports.createResponse = exports.CustomHistory = void 0;
+exports.JsonConfigService = exports.AppContextService = exports.APP_CONTEXT = exports.templateZip = exports.serializableAssets = exports.createMicroElementTemplate = exports.HttpInterceptingHandler = exports.HttpHandler = exports.HttpFetchHandler = exports.HttpClient = exports.createResponse = exports.CustomHistory = void 0;
 var tslib_1 = require("tslib");
 var custom_history_1 = require("./common/custom-history");
 Object.defineProperty(exports, "CustomHistory", { enumerable: true, get: function () { return custom_history_1.CustomHistory; } });
 var http_1 = require("./common/http");
 Object.defineProperty(exports, "createResponse", { enumerable: true, get: function () { return http_1.createResponse; } });
-Object.defineProperty(exports, "HTTP_INTERCEPTORS", { enumerable: true, get: function () { return http_1.HTTP_INTERCEPTORS; } });
 Object.defineProperty(exports, "HttpClient", { enumerable: true, get: function () { return http_1.HttpClient; } });
 Object.defineProperty(exports, "HttpFetchHandler", { enumerable: true, get: function () { return http_1.HttpFetchHandler; } });
 Object.defineProperty(exports, "HttpHandler", { enumerable: true, get: function () { return http_1.HttpHandler; } });

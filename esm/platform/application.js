@@ -2,12 +2,11 @@ import { __awaiter, __rest } from "tslib";
 // eslint-disable-next-line max-len
 import { Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, makeMethodDecorator, makePropDecorator, reflectCapabilities, ROOT_SCOPE, setInjectableDef } from '@fm/di';
 import { get } from 'lodash';
-import { cloneDeepPlain } from '../../utility';
+import { APPLICATION_METADATA, APPLICATION_TOKEN } from '../token';
+import { cloneDeepPlain } from '../utility';
 const APPLICATION = 'Application';
 const DELETE_TOKEN = InjectorToken.get('DELETE_TOKEN');
 export const PLATFORM_SCOPE = 'platform';
-export const APPLICATION_TOKEN = InjectorToken.get('APPLICATION_TOKEN');
-export const APPLICATION_METADATA = InjectorToken.get('APPLICATION_METADATA');
 export class ApplicationContext {
     constructor(_platformProv = [], _prov = []) {
         this.dynamicInjectors = [];
