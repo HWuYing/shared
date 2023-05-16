@@ -1,6 +1,6 @@
 import { __awaiter, __rest } from "tslib";
 // eslint-disable-next-line max-len
-import { Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, makeMethodDecorator, makePropDecorator, reflectCapabilities, ROOT_SCOPE, setInjectableDef } from '@fm/di';
+import { Inject, Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, makeMethodDecorator, ROOT_SCOPE, setInjectableDef } from '@fm/di';
 import { get } from 'lodash';
 import { APPLICATION_METADATA, APPLICATION_TOKEN } from '../token';
 import { cloneDeepPlain } from '../utility';
@@ -79,12 +79,8 @@ export class ApplicationContext {
         return makeMethodDecorator(name, undefined, typeFn);
     }
     makePropInput(name) {
-        const typeFn = (target, prop, key) => {
-            const useFactory = (metadata) => get(metadata, key);
-            const [provide] = reflectCapabilities.getPropAnnotations(target, prop);
-            this.addProvider({ provide, useFactory, deps: [APPLICATION_METADATA] });
-        };
-        return makePropDecorator(name, (key) => ({ key }), typeFn);
+        const transform = (key) => (_meta, value) => get(value, key);
+        return (key) => Inject(APPLICATION_METADATA, { metadataName: name, transform: transform(key) });
     }
     get platformProviders() {
         return this._platformProviders;

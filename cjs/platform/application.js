@@ -112,13 +112,8 @@ var ApplicationContext = /** @class */ (function () {
         return (0, di_1.makeMethodDecorator)(name, undefined, typeFn);
     };
     ApplicationContext.prototype.makePropInput = function (name) {
-        var _this = this;
-        var typeFn = function (target, prop, key) {
-            var useFactory = function (metadata) { return (0, lodash_1.get)(metadata, key); };
-            var provide = di_1.reflectCapabilities.getPropAnnotations(target, prop)[0];
-            _this.addProvider({ provide: provide, useFactory: useFactory, deps: [token_1.APPLICATION_METADATA] });
-        };
-        return (0, di_1.makePropDecorator)(name, function (key) { return ({ key: key }); }, typeFn);
+        var transform = function (key) { return function (_meta, value) { return (0, lodash_1.get)(value, key); }; };
+        return function (key) { return (0, di_1.Inject)(token_1.APPLICATION_METADATA, { metadataName: name, transform: transform(key) }); };
     };
     Object.defineProperty(ApplicationContext.prototype, "platformProviders", {
         get: function () {

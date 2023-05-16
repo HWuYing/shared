@@ -1,6 +1,6 @@
 import { __assign, __awaiter, __generator, __rest } from "tslib";
 // eslint-disable-next-line max-len
-import { Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, makeMethodDecorator, makePropDecorator, reflectCapabilities, ROOT_SCOPE, setInjectableDef } from '@fm/di';
+import { Inject, Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, makeMethodDecorator, ROOT_SCOPE, setInjectableDef } from '@fm/di';
 import { get } from 'lodash';
 import { APPLICATION_METADATA, APPLICATION_TOKEN } from '../token';
 import { cloneDeepPlain } from '../utility';
@@ -109,13 +109,8 @@ var ApplicationContext = /** @class */ (function () {
         return makeMethodDecorator(name, undefined, typeFn);
     };
     ApplicationContext.prototype.makePropInput = function (name) {
-        var _this = this;
-        var typeFn = function (target, prop, key) {
-            var useFactory = function (metadata) { return get(metadata, key); };
-            var provide = reflectCapabilities.getPropAnnotations(target, prop)[0];
-            _this.addProvider({ provide: provide, useFactory: useFactory, deps: [APPLICATION_METADATA] });
-        };
-        return makePropDecorator(name, function (key) { return ({ key: key }); }, typeFn);
+        var transform = function (key) { return function (_meta, value) { return get(value, key); }; };
+        return function (key) { return Inject(APPLICATION_METADATA, { metadataName: name, transform: transform(key) }); };
     };
     Object.defineProperty(ApplicationContext.prototype, "platformProviders", {
         get: function () {
