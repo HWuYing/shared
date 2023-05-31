@@ -6,6 +6,7 @@ export interface MicroStoreInterface {
 export interface SharedDataInterface {
     set(key: string, value: any): void;
     get<T>(key: string): T;
+    delete(key: string): void;
 }
 export interface MicroManageInterface {
     readonly sharedData: SharedDataInterface;

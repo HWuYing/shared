@@ -32,7 +32,7 @@ var ApplicationContext = /** @class */ (function () {
         this.dynamicInjectors.push(injector);
     };
     ApplicationContext.prototype.deleteInjector = function (injector) {
-        var indexOf = this.dynamicInjectors.findIndex(function (item) { return item === injector; });
+        var indexOf = this.dynamicInjectors.indexOf(injector);
         if (indexOf !== -1)
             this.dynamicInjectors.splice(indexOf, 1);
     };

@@ -26,7 +26,7 @@ export class ApplicationContext {
         this.dynamicInjectors.push(injector);
     }
     deleteInjector(injector) {
-        const indexOf = this.dynamicInjectors.findIndex((item) => item === injector);
+        const indexOf = this.dynamicInjectors.indexOf(injector);
         if (indexOf !== -1)
             this.dynamicInjectors.splice(indexOf, 1);
     }
