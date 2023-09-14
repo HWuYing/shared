@@ -46,12 +46,10 @@ var ApplicationContext = /** @class */ (function () {
         });
     };
     ApplicationContext.prototype.addProvider = function (provider) {
-        this._providers.push(provider);
-        this.setDynamicProv(provider);
-    };
-    ApplicationContext.prototype.addPlatformProvider = function (provider) {
-        this._platformProviders.push(provider);
-        this.setDynamicProv(provider, true);
+        var isPlatform = provider.providedIn === exports.PLATFORM_SCOPE;
+        var providers = isPlatform ? this._platformProviders : this._providers;
+        providers.push(provider);
+        this.setDynamicProv(provider, isPlatform);
     };
     ApplicationContext.prototype.getApp = function (injector, app, metadata) {
         var _a;
@@ -104,10 +102,7 @@ var ApplicationContext = /** @class */ (function () {
                 meta[_i - 3] = arguments[_i];
             }
             var _a = meta[0], token = _a === void 0 ? method : _a, _b = meta[1], options = _b === void 0 ? {} : _b;
-            var providedIn = options.providedIn, others = tslib_1.__rest(options, ["providedIn"]);
-            var useFactory = function (target) { return descriptor.value.apply(target); };
-            var providers = providedIn === exports.PLATFORM_SCOPE ? _this.addPlatformProvider : _this.addProvider;
-            providers.call(_this, tslib_1.__assign(tslib_1.__assign({ provide: token }, others), { useFactory: useFactory, deps: [type] }));
+            _this.addProvider(tslib_1.__assign(tslib_1.__assign({ provide: token }, options), { useFactory: function (target) { return descriptor.value.apply(target); }, deps: [type] }));
         };
         return (0, di_1.makeMethodDecorator)(name, undefined, typeFn);
     };

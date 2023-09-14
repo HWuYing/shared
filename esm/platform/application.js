@@ -1,4 +1,4 @@
-import { __awaiter, __rest } from "tslib";
+import { __awaiter } from "tslib";
 // eslint-disable-next-line max-len
 import { Inject, Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, makeMethodDecorator, ROOT_SCOPE, setInjectableDef } from '@fm/di';
 import { get } from 'lodash';
@@ -39,12 +39,10 @@ export class ApplicationContext {
         });
     }
     addProvider(provider) {
-        this._providers.push(provider);
-        this.setDynamicProv(provider);
-    }
-    addPlatformProvider(provider) {
-        this._platformProviders.push(provider);
-        this.setDynamicProv(provider, true);
+        const isPlatform = provider.providedIn === PLATFORM_SCOPE;
+        const providers = isPlatform ? this._platformProviders : this._providers;
+        providers.push(provider);
+        this.setDynamicProv(provider, isPlatform);
     }
     getApp(injector, app, metadata = {}) {
         var _a;
@@ -71,10 +69,7 @@ export class ApplicationContext {
     makeProvDecorator(name) {
         const typeFn = (type, method, descriptor, ...meta) => {
             const [token = method, options = {}] = meta;
-            const { providedIn } = options, others = __rest(options, ["providedIn"]);
-            const useFactory = (target) => descriptor.value.apply(target);
-            const providers = providedIn === PLATFORM_SCOPE ? this.addPlatformProvider : this.addProvider;
-            providers.call(this, Object.assign(Object.assign({ provide: token }, others), { useFactory, deps: [type] }));
+            this.addProvider(Object.assign(Object.assign({ provide: token }, options), { useFactory: (target) => descriptor.value.apply(target), deps: [type] }));
         };
         return makeMethodDecorator(name, undefined, typeFn);
     }

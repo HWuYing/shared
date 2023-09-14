@@ -22,7 +22,6 @@ export declare class ApplicationContext {
     private deleteInjector;
     private setDynamicProv;
     private addProvider;
-    private addPlatformProvider;
     private getApp;
     private registerApp;
     registerStart(runStart: () => any): void;

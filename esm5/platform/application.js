@@ -1,4 +1,4 @@
-import { __assign, __awaiter, __generator, __rest } from "tslib";
+import { __assign, __awaiter, __generator } from "tslib";
 // eslint-disable-next-line max-len
 import { Inject, Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, makeMethodDecorator, ROOT_SCOPE, setInjectableDef } from '@fm/di';
 import { get } from 'lodash';
@@ -43,12 +43,10 @@ var ApplicationContext = /** @class */ (function () {
         });
     };
     ApplicationContext.prototype.addProvider = function (provider) {
-        this._providers.push(provider);
-        this.setDynamicProv(provider);
-    };
-    ApplicationContext.prototype.addPlatformProvider = function (provider) {
-        this._platformProviders.push(provider);
-        this.setDynamicProv(provider, true);
+        var isPlatform = provider.providedIn === PLATFORM_SCOPE;
+        var providers = isPlatform ? this._platformProviders : this._providers;
+        providers.push(provider);
+        this.setDynamicProv(provider, isPlatform);
     };
     ApplicationContext.prototype.getApp = function (injector, app, metadata) {
         var _a;
@@ -101,10 +99,7 @@ var ApplicationContext = /** @class */ (function () {
                 meta[_i - 3] = arguments[_i];
             }
             var _a = meta[0], token = _a === void 0 ? method : _a, _b = meta[1], options = _b === void 0 ? {} : _b;
-            var providedIn = options.providedIn, others = __rest(options, ["providedIn"]);
-            var useFactory = function (target) { return descriptor.value.apply(target); };
-            var providers = providedIn === PLATFORM_SCOPE ? _this.addPlatformProvider : _this.addProvider;
-            providers.call(_this, __assign(__assign({ provide: token }, others), { useFactory: useFactory, deps: [type] }));
+            _this.addProvider(__assign(__assign({ provide: token }, options), { useFactory: function (target) { return descriptor.value.apply(target); }, deps: [type] }));
         };
         return makeMethodDecorator(name, undefined, typeFn);
     };
