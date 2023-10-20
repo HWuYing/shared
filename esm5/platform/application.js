@@ -1,4 +1,4 @@
-import { __assign, __awaiter, __generator } from "tslib";
+import { __assign, __awaiter, __generator, __rest, __spreadArray } from "tslib";
 // eslint-disable-next-line max-len
 import { Inject, Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, makeMethodDecorator, ROOT_SCOPE, setInjectableDef } from '@fm/di';
 import { get } from 'lodash';
@@ -98,8 +98,15 @@ var ApplicationContext = /** @class */ (function () {
             for (var _i = 3; _i < arguments.length; _i++) {
                 meta[_i - 3] = arguments[_i];
             }
-            var _a = meta[0], token = _a === void 0 ? method : _a, _b = meta[1], options = _b === void 0 ? {} : _b;
-            _this.addProvider(__assign(__assign({ provide: token }, options), { useFactory: function (target) { return descriptor.value.apply(target); }, deps: [type] }));
+            var _a = meta[0], token = _a === void 0 ? method : _a, _b = meta[1], _c = _b === void 0 ? {} : _b, _d = _c.deps, deps = _d === void 0 ? [] : _d, options = __rest(_c, ["deps"]);
+            var useFactory = function (target) {
+                var args = [];
+                for (var _i = 1; _i < arguments.length; _i++) {
+                    args[_i - 1] = arguments[_i];
+                }
+                return descriptor.value.apply(target, args);
+            };
+            _this.addProvider(__assign(__assign({ provide: token }, options), { useFactory: useFactory, deps: __spreadArray([type], deps, true) }));
         };
         return makeMethodDecorator(name, undefined, typeFn);
     };

@@ -1,4 +1,4 @@
-import { __awaiter } from "tslib";
+import { __awaiter, __rest } from "tslib";
 // eslint-disable-next-line max-len
 import { Inject, Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, makeMethodDecorator, ROOT_SCOPE, setInjectableDef } from '@fm/di';
 import { get } from 'lodash';
@@ -68,8 +68,9 @@ export class ApplicationContext {
     }
     makeProvDecorator(name) {
         const typeFn = (type, method, descriptor, ...meta) => {
-            const [token = method, options = {}] = meta;
-            this.addProvider(Object.assign(Object.assign({ provide: token }, options), { useFactory: (target) => descriptor.value.apply(target), deps: [type] }));
+            const [token = method, _a] = meta, _b = _a === void 0 ? {} : _a, { deps = [] } = _b, options = __rest(_b, ["deps"]);
+            const useFactory = (target, ...args) => descriptor.value.apply(target, args);
+            this.addProvider(Object.assign(Object.assign({ provide: token }, options), { useFactory, deps: [type, ...deps] }));
         };
         return makeMethodDecorator(name, undefined, typeFn);
     }

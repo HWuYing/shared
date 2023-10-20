@@ -101,8 +101,15 @@ var ApplicationContext = /** @class */ (function () {
             for (var _i = 3; _i < arguments.length; _i++) {
                 meta[_i - 3] = arguments[_i];
             }
-            var _a = meta[0], token = _a === void 0 ? method : _a, _b = meta[1], options = _b === void 0 ? {} : _b;
-            _this.addProvider(tslib_1.__assign(tslib_1.__assign({ provide: token }, options), { useFactory: function (target) { return descriptor.value.apply(target); }, deps: [type] }));
+            var _a = meta[0], token = _a === void 0 ? method : _a, _b = meta[1], _c = _b === void 0 ? {} : _b, _d = _c.deps, deps = _d === void 0 ? [] : _d, options = tslib_1.__rest(_c, ["deps"]);
+            var useFactory = function (target) {
+                var args = [];
+                for (var _i = 1; _i < arguments.length; _i++) {
+                    args[_i - 1] = arguments[_i];
+                }
+                return descriptor.value.apply(target, args);
+            };
+            _this.addProvider(tslib_1.__assign(tslib_1.__assign({ provide: token }, options), { useFactory: useFactory, deps: tslib_1.__spreadArray([type], deps, true) }));
         };
         return (0, di_1.makeMethodDecorator)(name, undefined, typeFn);
     };
