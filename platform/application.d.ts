@@ -1,4 +1,4 @@
-import { Provider, TokenKey, Type } from '@fm/di';
+import { Provider, Type } from '@fm/di';
 type MetadataProps = {
     [key: string]: any;
 };
@@ -6,10 +6,6 @@ export declare const PLATFORM_SCOPE = "platform";
 export interface MetadataInfo {
     load(): Promise<MetadataProps> | MetadataProps;
 }
-type ProvDecorator = (token: TokenKey, provider?: {
-    providedIn?: string;
-    [key: string]: any;
-}) => any;
 type ApplicationDecorator = <M extends MetadataInfo>(metadata?: Type<M> | MetadataProps) => <T = any>(cls: Type<T>) => Type<T>;
 export declare class ApplicationContext {
     private runStart;
@@ -21,13 +17,12 @@ export declare class ApplicationContext {
     private addInjector;
     private deleteInjector;
     private setDynamicProv;
-    private addProvider;
+    addProvider(provider: Provider): void;
     private getApp;
     private registerApp;
+    registerPlugin(plugin: Type<any>): void;
     registerStart(runStart: () => any): void;
     makeApplicationDecorator(): ApplicationDecorator;
-    makeProvDecorator(name: string): ProvDecorator;
-    makePropInput(name: string): (key: string) => any;
     get platformProviders(): Provider[];
     get providers(): Provider[];
 }

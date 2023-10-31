@@ -1,6 +1,5 @@
 import { __awaiter, __decorate, __metadata } from "tslib";
 import { Injectable, Injector } from '@fm/di';
-import { parsePath } from 'history';
 import { lastValueFrom, Subject } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { HISTORY, ROUTER_CONFIG } from '../../token';
@@ -18,7 +17,7 @@ let CustomHistory = class CustomHistory {
     loadRouter(url) {
         return __awaiter(this, void 0, void 0, function* () {
             this.pushRoute.next(url);
-            return this.resolveIntercept(parsePath(url));
+            return this.resolveIntercept(this.parsePath(url));
         });
     }
     navigateTo(url) {
@@ -73,6 +72,13 @@ let CustomHistory = class CustomHistory {
         const [pathname, query] = this.parse(location);
         const { params, list = [] } = this.router.getRouterByPath(pathname);
         return { path: pathname, query, params, list };
+    }
+    parsePath(url) {
+        return {
+            pathname: (url.match(/([^?#]*)/ig) || ['/'])[0],
+            search: (url.match(/\?([^#]*)/ig) || [''])[0],
+            hash: (url.match(/#([^?]*)/ig) || [''])[0]
+        };
     }
     parse(location) {
         const { pathname, search = '' } = location;

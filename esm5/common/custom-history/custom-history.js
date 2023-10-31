@@ -1,6 +1,5 @@
 import { __awaiter, __decorate, __generator, __metadata } from "tslib";
 import { Injectable, Injector } from '@fm/di';
-import { parsePath } from 'history';
 import { lastValueFrom, Subject } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { HISTORY, ROUTER_CONFIG } from '../../token';
@@ -19,7 +18,7 @@ var CustomHistory = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 this.pushRoute.next(url);
-                return [2 /*return*/, this.resolveIntercept(parsePath(url))];
+                return [2 /*return*/, this.resolveIntercept(this.parsePath(url))];
             });
         });
     };
@@ -117,6 +116,13 @@ var CustomHistory = /** @class */ (function () {
         var _a = this.parse(location), pathname = _a[0], query = _a[1];
         var _b = this.router.getRouterByPath(pathname), params = _b.params, _c = _b.list, list = _c === void 0 ? [] : _c;
         return { path: pathname, query: query, params: params, list: list };
+    };
+    CustomHistory.prototype.parsePath = function (url) {
+        return {
+            pathname: (url.match(/([^?#]*)/ig) || ['/'])[0],
+            search: (url.match(/\?([^#]*)/ig) || [''])[0],
+            hash: (url.match(/#([^?]*)/ig) || [''])[0]
+        };
     };
     CustomHistory.prototype.parse = function (location) {
         var pathname = location.pathname, _a = location.search, search = _a === void 0 ? '' : _a;

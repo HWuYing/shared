@@ -1,9 +1,9 @@
-import { __awaiter, __rest } from "tslib";
-// eslint-disable-next-line max-len
-import { Inject, Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, makeMethodDecorator, ROOT_SCOPE, setInjectableDef } from '@fm/di';
-import { get } from 'lodash';
-import { APPLICATION_METADATA, APPLICATION_TOKEN } from '../token';
+import { __awaiter } from "tslib";
+/* eslint-disable no-await-in-loop */
+import { Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, ROOT_SCOPE, setInjectableDef } from '@fm/di';
+import { APPLICATION_METADATA, APPLICATION_PLUGIN, APPLICATION_TOKEN } from '../token';
 import { cloneDeepPlain } from '../utility';
+import { execute } from './decorator';
 const APPLICATION = 'Application';
 const DELETE_TOKEN = InjectorToken.get('DELETE_TOKEN');
 export const PLATFORM_SCOPE = 'platform';
@@ -51,6 +51,9 @@ export class ApplicationContext {
             const _metadata = isProvide ? yield Promise.resolve(((_a = injector.get(metadata)) === null || _a === void 0 ? void 0 : _a.load()) || {}) : metadata;
             injector.set(APPLICATION_METADATA, { provide: APPLICATION_METADATA, useFactory: () => cloneDeepPlain(_metadata) });
             injector.set(APPLICATION_TOKEN, { provide: APPLICATION_TOKEN, useValue: injector.get(app) });
+            for (const plugin of (injector.get(APPLICATION_PLUGIN) || []).sort((item) => item.__order__ || 0)) {
+                yield plugin.register();
+            }
             return injector.get(APPLICATION_TOKEN);
         });
     }
@@ -58,25 +61,17 @@ export class ApplicationContext {
         const appFactory = (injector) => __awaiter(this, void 0, void 0, function* () { return this.getApp(injector, app, metadata); });
         this.addProvider({ provide: APPLICATION_TOKEN, useFactory: appFactory, deps: [Injector] });
         setInjectableDef(app);
+        execute(this);
         this.runStart();
+    }
+    registerPlugin(plugin) {
+        this.addProvider({ provide: APPLICATION_PLUGIN, multi: true, useExisting: plugin });
     }
     registerStart(runStart) {
         this.runStart = runStart;
     }
     makeApplicationDecorator() {
         return makeDecorator(APPLICATION, undefined, (injectableType, metadata) => this.registerApp(injectableType, metadata));
-    }
-    makeProvDecorator(name) {
-        const typeFn = (type, method, descriptor, ...meta) => {
-            const [token = method, _a] = meta, _b = _a === void 0 ? {} : _a, { deps = [] } = _b, options = __rest(_b, ["deps"]);
-            const useFactory = (target, ...args) => descriptor.value.apply(target, args);
-            this.addProvider(Object.assign(Object.assign({ provide: token }, options), { useFactory, deps: [type, ...deps] }));
-        };
-        return makeMethodDecorator(name, undefined, typeFn);
-    }
-    makePropInput(name) {
-        const transform = (key) => (_meta, value) => get(value, key);
-        return (key) => Inject(APPLICATION_METADATA, { metadataName: name, transform: transform(key) });
     }
     get platformProviders() {
         return this._platformProviders;

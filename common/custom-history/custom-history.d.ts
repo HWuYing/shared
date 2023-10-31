@@ -20,6 +20,7 @@ export declare class CustomHistory {
     private listener;
     private resolveIntercept;
     private createRouteInfo;
+    private parsePath;
     private parse;
     private parseSearch;
 }

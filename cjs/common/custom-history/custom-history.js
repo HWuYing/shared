@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomHistory = void 0;
 var tslib_1 = require("tslib");
 var di_1 = require("@fm/di");
-var history_1 = require("history");
 var rxjs_1 = require("rxjs");
 var operators_1 = require("rxjs/operators");
 var token_1 = require("../../token");
@@ -22,7 +21,7 @@ var CustomHistory = /** @class */ (function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 this.pushRoute.next(url);
-                return [2 /*return*/, this.resolveIntercept((0, history_1.parsePath)(url))];
+                return [2 /*return*/, this.resolveIntercept(this.parsePath(url))];
             });
         });
     };
@@ -120,6 +119,13 @@ var CustomHistory = /** @class */ (function () {
         var _a = this.parse(location), pathname = _a[0], query = _a[1];
         var _b = this.router.getRouterByPath(pathname), params = _b.params, _c = _b.list, list = _c === void 0 ? [] : _c;
         return { path: pathname, query: query, params: params, list: list };
+    };
+    CustomHistory.prototype.parsePath = function (url) {
+        return {
+            pathname: (url.match(/([^?#]*)/ig) || ['/'])[0],
+            search: (url.match(/\?([^#]*)/ig) || [''])[0],
+            hash: (url.match(/#([^?]*)/ig) || [''])[0]
+        };
     };
     CustomHistory.prototype.parse = function (location) {
         var pathname = location.pathname, _a = location.search, search = _a === void 0 ? '' : _a;

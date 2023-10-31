@@ -163,5 +163,7 @@
 	},
 	"author": "",
 	"license": "ISC",
-	"sideEffects": false
+	"sideEffects": [
+		"*.effects.js"
+	]
 }
