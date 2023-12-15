@@ -7,4 +7,4 @@ var RequestMethod;
     RequestMethod["POST"] = "post";
     RequestMethod["PUT"] = "put";
     RequestMethod["DELETE"] = "delete";
-})(RequestMethod = exports.RequestMethod || (exports.RequestMethod = {}));
+})(RequestMethod || (exports.RequestMethod = RequestMethod = {}));
