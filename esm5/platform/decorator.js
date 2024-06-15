@@ -4,7 +4,7 @@ import { Inject, makeDecorator, makeMethodDecorator, setInjectableDef } from '@f
 import { get } from 'lodash';
 import { APPLICATION_METADATA } from '../token';
 var queue = [];
-var transform = function (key) { return function (_meta, value) { return get(value, key); }; };
+var transform = function (key) { return function (_meta, value, type, prop) { return get(value, key, type[prop]); }; };
 export var registerProvider = function (provider) { return queue.push(function (applicationContext) { return applicationContext.addProvider(provider); }); };
 export var ApplicationPlugin = makeDecorator('ApplicationPlugin', undefined, function (plugin) {
     setInjectableDef(plugin);

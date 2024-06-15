@@ -4,7 +4,7 @@ import { Inject, makeDecorator, makeMethodDecorator, setInjectableDef } from '@f
 import { get } from 'lodash';
 import { APPLICATION_METADATA } from '../token';
 const queue = [];
-const transform = (key) => (_meta, value) => get(value, key);
+const transform = (key) => (_meta, value, type, prop) => get(value, key, type[prop]);
 export const registerProvider = (provider) => queue.push((applicationContext) => applicationContext.addProvider(provider));
 export const ApplicationPlugin = makeDecorator('ApplicationPlugin', undefined, (plugin) => {
     setInjectableDef(plugin);
