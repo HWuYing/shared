@@ -71,7 +71,7 @@ var ApplicationContext = /** @class */ (function () {
                     case 3:
                         _metadata = _b;
                         injector.set(token_1.APPLICATION_METADATA, { provide: token_1.APPLICATION_METADATA, useFactory: function () { return (0, utility_1.cloneDeepPlain)(_metadata); } });
-                        injector.set(token_1.APPLICATION_TOKEN, { provide: token_1.APPLICATION_TOKEN, useValue: injector.get(app) });
+                        injector.set(token_1.APPLICATION_TOKEN, { provide: token_1.APPLICATION_TOKEN, useFactory: injector.get(app) });
                         _i = 0, _c = (injector.get(token_1.APPLICATION_PLUGIN) || []).sort(function (item) { return item.__order__ || 0; });
                         _d.label = 4;
                     case 4:

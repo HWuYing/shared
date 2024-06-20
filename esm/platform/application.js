@@ -50,7 +50,7 @@ export class ApplicationContext {
             const isProvide = typeof metadata === 'function' || metadata instanceof InjectorToken;
             const _metadata = isProvide ? yield Promise.resolve(((_a = injector.get(metadata)) === null || _a === void 0 ? void 0 : _a.load()) || {}) : metadata;
             injector.set(APPLICATION_METADATA, { provide: APPLICATION_METADATA, useFactory: () => cloneDeepPlain(_metadata) });
-            injector.set(APPLICATION_TOKEN, { provide: APPLICATION_TOKEN, useValue: injector.get(app) });
+            injector.set(APPLICATION_TOKEN, { provide: APPLICATION_TOKEN, useFactory: injector.get(app) });
             for (const plugin of (injector.get(APPLICATION_PLUGIN) || []).sort((item) => item.__order__ || 0)) {
                 yield plugin.register();
             }
