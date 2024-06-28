@@ -2,7 +2,7 @@ import { __assign, __decorate, __metadata } from "tslib";
 import { Injectable } from '@fm/di';
 import { mergeMap } from 'rxjs/operators';
 import { RequestMethod } from './consts';
-import { HttpHandler } from "./http-handler";
+import { HttpHandler } from './http-handler';
 var HttpClient = /** @class */ (function () {
     function HttpClient(handler) {
         this.handler = handler;

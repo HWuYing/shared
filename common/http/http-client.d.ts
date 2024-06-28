@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { HttpHandler } from "./http-handler";
+import { HttpHandler } from './http-handler';
 export declare class HttpClient {
     private handler;
     constructor(handler: HttpHandler);
