@@ -105,7 +105,8 @@ var ApplicationContext = /** @class */ (function () {
     };
     ApplicationContext.prototype.makeApplicationDecorator = function () {
         var _this = this;
-        return makeDecorator(APPLICATION, undefined, function (injectableType, metadata) { return _this.registerApp(injectableType, metadata); });
+        var props = function (metadata) { return ({ metadata: metadata }); };
+        return makeDecorator(APPLICATION, props, function (injectableType, metadata) { return _this.registerApp(injectableType, metadata); });
     };
     Object.defineProperty(ApplicationContext.prototype, "platformProviders", {
         get: function () {

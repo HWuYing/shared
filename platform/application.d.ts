@@ -6,7 +6,6 @@ export declare const PLATFORM_SCOPE = "platform";
 export interface MetadataInfo {
     load(): Promise<MetadataProps> | MetadataProps;
 }
-type ApplicationDecorator = <M extends MetadataInfo>(metadata?: Type<M> | MetadataProps) => <T = any>(cls: Type<T>) => Type<T>;
 export declare class ApplicationContext {
     private runStart;
     private dynamicInjectors;
@@ -22,7 +21,7 @@ export declare class ApplicationContext {
     private registerApp;
     registerPlugin(plugin: Type<any>): void;
     registerStart(runStart: () => any): void;
-    makeApplicationDecorator(): ApplicationDecorator;
+    makeApplicationDecorator(): (metadata?: MetadataProps | Type<MetadataInfo>) => import("../../di/decorators").ClassDecorator;
     get platformProviders(): Provider[];
     get providers(): Provider[];
 }

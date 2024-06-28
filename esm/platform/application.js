@@ -71,7 +71,8 @@ export class ApplicationContext {
         this.runStart = runStart;
     }
     makeApplicationDecorator() {
-        return makeDecorator(APPLICATION, undefined, (injectableType, metadata) => this.registerApp(injectableType, metadata));
+        const props = (metadata) => ({ metadata });
+        return makeDecorator(APPLICATION, props, (injectableType, metadata) => this.registerApp(injectableType, metadata));
     }
     get platformProviders() {
         return this._platformProviders;
