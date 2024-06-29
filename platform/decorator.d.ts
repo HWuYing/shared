@@ -7,6 +7,6 @@ type ProvDecorator = (token: TokenKey, provider?: {
 export declare const registerProvider: (provider: Provider) => number;
 export declare const ApplicationPlugin: () => ClassDecorator;
 export declare const Prov: ProvDecorator;
-export declare const Input: (key: string) => ParameterDecorator & PropertyDecorator;
+export declare const Input: (key: string) => import("@fm/di").TargetDecorator;
 export declare const execute: (applicationContext: ApplicationContext) => void;
 export {};
