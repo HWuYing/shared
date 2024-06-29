@@ -19,9 +19,9 @@ export declare class ApplicationContext {
     addProvider(provider: Provider): void;
     private getApp;
     private registerApp;
-    registerPlugin(plugin: Type<any>): void;
+    registerPlugin(plugin: Type): void;
     registerStart(runStart: () => any): void;
-    makeApplicationDecorator(): (metadata?: MetadataProps | Type<MetadataInfo>) => import("../../di/decorators").ClassDecorator;
+    makeApplicationDecorator(): (metadata?: MetadataProps | Type<MetadataInfo>) => ClassDecorator;
     get platformProviders(): Provider[];
     get providers(): Provider[];
 }
