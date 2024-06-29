@@ -1,7 +1,7 @@
 import { __awaiter, __generator } from "tslib";
 /* eslint-disable no-await-in-loop */
 import { Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, ROOT_SCOPE, setInjectableDef } from '@fm/di';
-import { APPLICATION_METADATA, APPLICATION_PLUGIN, APPLICATION_TOKEN } from '../token';
+import { APPLICATION_METADATA, APPLICATION_PLUGIN, APPLICATION_TOKEN, RUNTIME_INJECTOR } from '../token';
 import { cloneDeepPlain } from '../utility';
 import { execute } from './decorator';
 var APPLICATION = 'Application';
@@ -49,35 +49,36 @@ var ApplicationContext = /** @class */ (function () {
         this.setDynamicProv(provider, isPlatform);
     };
     ApplicationContext.prototype.getApp = function (injector, app, metadata) {
-        var _a;
+        var _a, _b;
         if (metadata === void 0) { metadata = {}; }
         return __awaiter(this, void 0, void 0, function () {
-            var isProvide, _metadata, _b, _i, _c, plugin;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var isProvide, _metadata, _c, _i, _d, plugin;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
                         isProvide = typeof metadata === 'function' || metadata instanceof InjectorToken;
                         if (!isProvide) return [3 /*break*/, 2];
                         return [4 /*yield*/, Promise.resolve(((_a = injector.get(metadata)) === null || _a === void 0 ? void 0 : _a.load()) || {})];
                     case 1:
-                        _b = _d.sent();
+                        _c = _e.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        _b = metadata;
-                        _d.label = 3;
+                        _c = metadata;
+                        _e.label = 3;
                     case 3:
-                        _metadata = _b;
+                        _metadata = _c;
                         injector.set(APPLICATION_METADATA, { provide: APPLICATION_METADATA, useFactory: function () { return cloneDeepPlain(_metadata); } });
                         injector.set(APPLICATION_TOKEN, { provide: APPLICATION_TOKEN, useFactory: function () { return injector.get(app); } });
-                        _i = 0, _c = (injector.get(APPLICATION_PLUGIN) || []).sort(function (item) { return item.__order__ || 0; });
-                        _d.label = 4;
+                        (_b = injector.get(RUNTIME_INJECTOR)) === null || _b === void 0 ? void 0 : _b.forEach(function (fn) { return fn(injector); });
+                        _i = 0, _d = (injector.get(APPLICATION_PLUGIN) || []).sort(function (item) { return item.__order__ || 0; });
+                        _e.label = 4;
                     case 4:
-                        if (!(_i < _c.length)) return [3 /*break*/, 7];
-                        plugin = _c[_i];
+                        if (!(_i < _d.length)) return [3 /*break*/, 7];
+                        plugin = _d[_i];
                         return [4 /*yield*/, plugin.register()];
                     case 5:
-                        _d.sent();
-                        _d.label = 6;
+                        _e.sent();
+                        _e.label = 6;
                     case 6:
                         _i++;
                         return [3 /*break*/, 4];

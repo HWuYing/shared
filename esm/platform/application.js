@@ -1,7 +1,7 @@
 import { __awaiter } from "tslib";
 /* eslint-disable no-await-in-loop */
 import { Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, ROOT_SCOPE, setInjectableDef } from '@fm/di';
-import { APPLICATION_METADATA, APPLICATION_PLUGIN, APPLICATION_TOKEN } from '../token';
+import { APPLICATION_METADATA, APPLICATION_PLUGIN, APPLICATION_TOKEN, RUNTIME_INJECTOR } from '../token';
 import { cloneDeepPlain } from '../utility';
 import { execute } from './decorator';
 const APPLICATION = 'Application';
@@ -45,15 +45,15 @@ export class ApplicationContext {
         this.setDynamicProv(provider, isPlatform);
     }
     getApp(injector, app, metadata = {}) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const isProvide = typeof metadata === 'function' || metadata instanceof InjectorToken;
             const _metadata = isProvide ? yield Promise.resolve(((_a = injector.get(metadata)) === null || _a === void 0 ? void 0 : _a.load()) || {}) : metadata;
             injector.set(APPLICATION_METADATA, { provide: APPLICATION_METADATA, useFactory: () => cloneDeepPlain(_metadata) });
             injector.set(APPLICATION_TOKEN, { provide: APPLICATION_TOKEN, useFactory: () => injector.get(app) });
-            for (const plugin of (injector.get(APPLICATION_PLUGIN) || []).sort((item) => item.__order__ || 0)) {
+            (_b = injector.get(RUNTIME_INJECTOR)) === null || _b === void 0 ? void 0 : _b.forEach((fn) => fn(injector));
+            for (const plugin of (injector.get(APPLICATION_PLUGIN) || []).sort((item) => item.__order__ || 0))
                 yield plugin.register();
-            }
             return injector.get(APPLICATION_TOKEN);
         });
     }
