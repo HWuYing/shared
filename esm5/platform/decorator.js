@@ -2,7 +2,8 @@ import { __assign, __rest, __spreadArray } from "tslib";
 /* eslint-disable max-len */
 import { Inject, makeDecorator, makeMethodDecorator, setInjectableDef } from '@fm/di';
 import { get } from 'lodash';
-import { APPLICATION_METADATA, RUNTIME_INJECTOR } from '../token';
+import { APPLICATION_METADATA, APPLICATION_PLUGIN, RUNTIME_INJECTOR } from '../token';
+import { ApplicationContext } from '.';
 var queue = [];
 var transform = function (key) { return function (_meta, value, type, prop) { return get(value, key, type && type[prop]); }; };
 export var registerProvider = function (provider) { return queue.push(function (ctx) { return ctx.addProvider(provider); }); };
@@ -14,8 +15,9 @@ export var createRegisterLoader = function (token) {
         list.push(loader);
     };
 };
+export var Register = makeDecorator('Register', function (providers) { return ({ providers: providers }); }, function (_type, providers) { return registerProvider(providers); });
 export var ApplicationPlugin = makeDecorator('ApplicationPlugin', undefined, function (plugin) {
-    queue.push(function (applicationContext) { return applicationContext.registerPlugin(setInjectableDef(plugin)); });
+    registerProvider({ provide: APPLICATION_PLUGIN, multi: true, useExisting: setInjectableDef(plugin) });
 });
 export var Prov = makeMethodDecorator('ProvDecorator', undefined, function (type, method, descriptor) {
     var meta = [];
@@ -32,6 +34,14 @@ export var Prov = makeMethodDecorator('ProvDecorator', undefined, function (type
     };
     registerProvider(__assign(__assign({ provide: token }, options), { useFactory: useFactory, deps: __spreadArray([type], deps, true) }));
 });
+export var makeApplication = function (handler) {
+    function typeFn(type, metadata) {
+        var applicationContext = new ApplicationContext();
+        queue.forEach(function (fn) { return fn(applicationContext); });
+        applicationContext.registerApp(setInjectableDef(type), metadata);
+        handler(applicationContext);
+    }
+    return makeDecorator('Application', function (metadata) { return ({ metadata: metadata }); }, typeFn);
+};
 export var runtimeInjector = createRegisterLoader(RUNTIME_INJECTOR);
 export var Input = function (key) { return Inject(APPLICATION_METADATA, { metadataName: 'InputPropDecorator', transform: transform(key) }); };
-export var execute = function (applicationContext) { return queue.forEach(function (fn) { return fn(applicationContext); }); };

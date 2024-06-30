@@ -1,10 +1,9 @@
 import { __awaiter, __generator } from "tslib";
 /* eslint-disable no-await-in-loop */
-import { Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, ROOT_SCOPE, setInjectableDef } from '@fm/di';
+import { Injector, INJECTOR_SCOPE, InjectorToken, ROOT_SCOPE } from '@fm/di';
+import { forEach } from 'lodash';
 import { APPLICATION_METADATA, APPLICATION_PLUGIN, APPLICATION_TOKEN, RUNTIME_INJECTOR } from '../token';
 import { cloneDeepPlain } from '../utility';
-import { execute } from './decorator';
-var APPLICATION = 'Application';
 var DELETE_TOKEN = InjectorToken.get('DELETE_TOKEN');
 export var PLATFORM_SCOPE = 'platform';
 var ApplicationContext = /** @class */ (function () {
@@ -37,44 +36,46 @@ var ApplicationContext = /** @class */ (function () {
         if (isPlatform === void 0) { isPlatform = false; }
         var provide = provider.provide;
         this.dynamicInjectors.forEach(function (injector) {
-            var needPush = isPlatform ? injector.scope === PLATFORM_SCOPE : injector.scope !== PLATFORM_SCOPE;
-            if (needPush)
+            if (injector.scope === PLATFORM_SCOPE === isPlatform)
                 injector.set(provide, provider);
         });
     };
-    ApplicationContext.prototype.addProvider = function (provider) {
-        var isPlatform = provider.providedIn === PLATFORM_SCOPE;
-        var providers = isPlatform ? this._platformProviders : this._providers;
-        providers.push(provider);
-        this.setDynamicProv(provider, isPlatform);
+    ApplicationContext.prototype.addProvider = function (providers) {
+        var _this = this;
+        forEach([providers], function (provider) {
+            var isPlatform = provider.providedIn === PLATFORM_SCOPE;
+            var _providers = isPlatform ? _this._platformProviders : _this._providers;
+            _providers.push(provider);
+            _this.setDynamicProv(provider, isPlatform);
+        });
     };
-    ApplicationContext.prototype.getApp = function (injector, app, metadata) {
-        var _a, _b;
-        if (metadata === void 0) { metadata = {}; }
-        return __awaiter(this, void 0, void 0, function () {
-            var isProvide, _metadata, _c, _i, _d, plugin;
+    ApplicationContext.prototype.getApp = function (injector_1, app_1) {
+        return __awaiter(this, arguments, void 0, function (injector, app, metadata) {
+            var isProvide, _metadata, _a, _i, _b, plugin;
+            var _c, _d;
+            if (metadata === void 0) { metadata = {}; }
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
                         isProvide = typeof metadata === 'function' || metadata instanceof InjectorToken;
                         if (!isProvide) return [3 /*break*/, 2];
-                        return [4 /*yield*/, Promise.resolve(((_a = injector.get(metadata)) === null || _a === void 0 ? void 0 : _a.load()) || {})];
+                        return [4 /*yield*/, Promise.resolve(((_c = injector.get(metadata)) === null || _c === void 0 ? void 0 : _c.load()) || {})];
                     case 1:
-                        _c = _e.sent();
+                        _a = _e.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        _c = metadata;
+                        _a = metadata;
                         _e.label = 3;
                     case 3:
-                        _metadata = _c;
+                        _metadata = _a;
                         injector.set(APPLICATION_METADATA, { provide: APPLICATION_METADATA, useFactory: function () { return cloneDeepPlain(_metadata); } });
                         injector.set(APPLICATION_TOKEN, { provide: APPLICATION_TOKEN, useFactory: function () { return injector.get(app); } });
-                        (_b = injector.get(RUNTIME_INJECTOR)) === null || _b === void 0 ? void 0 : _b.forEach(function (fn) { return fn(injector); });
-                        _i = 0, _d = (injector.get(APPLICATION_PLUGIN) || []).sort(function (item) { return item.__order__ || 0; });
+                        (_d = injector.get(RUNTIME_INJECTOR)) === null || _d === void 0 ? void 0 : _d.forEach(function (fn) { return fn(injector); });
+                        _i = 0, _b = (injector.get(APPLICATION_PLUGIN) || []).sort(function (item) { return item.__order__ || 0; });
                         _e.label = 4;
                     case 4:
-                        if (!(_i < _d.length)) return [3 /*break*/, 7];
-                        plugin = _d[_i];
+                        if (!(_i < _b.length)) return [3 /*break*/, 7];
+                        plugin = _b[_i];
                         return [4 /*yield*/, plugin.register()];
                     case 5:
                         _e.sent();
@@ -94,20 +95,6 @@ var ApplicationContext = /** @class */ (function () {
             return [2 /*return*/, this.getApp(injector, app, metadata)];
         }); }); };
         this.addProvider({ provide: APPLICATION_TOKEN, useFactory: appFactory, deps: [Injector] });
-        setInjectableDef(app);
-        execute(this);
-        this.runStart();
-    };
-    ApplicationContext.prototype.registerPlugin = function (plugin) {
-        this.addProvider({ provide: APPLICATION_PLUGIN, multi: true, useExisting: plugin });
-    };
-    ApplicationContext.prototype.registerStart = function (runStart) {
-        this.runStart = runStart;
-    };
-    ApplicationContext.prototype.makeApplicationDecorator = function () {
-        var _this = this;
-        var props = function (metadata) { return ({ metadata: metadata }); };
-        return makeDecorator(APPLICATION, props, function (injectableType, metadata) { return _this.registerApp(injectableType, metadata); });
     };
     Object.defineProperty(ApplicationContext.prototype, "platformProviders", {
         get: function () {

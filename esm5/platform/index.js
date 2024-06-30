@@ -1,5 +1,6 @@
 import { Injector } from '@fm/di';
 import { PLATFORM } from '../token';
+export { ApplicationContext, PLATFORM_SCOPE } from './application';
 export function createPlatformFactory(createPlatform) {
     var providers = [];
     for (var _i = 1; _i < arguments.length; _i++) {

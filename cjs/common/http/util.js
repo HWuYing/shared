@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createResponse = void 0;
+exports.createResponse = createResponse;
 function base64ToUint8Array(raw) {
     var rawLength = raw.length;
     var array = new Uint8Array(new ArrayBuffer(rawLength));
@@ -20,4 +20,3 @@ function createResponse(source, isBase64) {
     });
     return new Response(stream);
 }
-exports.createResponse = createResponse;

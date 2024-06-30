@@ -1,8 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPlatformFactory = void 0;
+exports.PLATFORM_SCOPE = exports.ApplicationContext = void 0;
+exports.createPlatformFactory = createPlatformFactory;
 var di_1 = require("@fm/di");
 var token_1 = require("../token");
+var application_1 = require("./application");
+Object.defineProperty(exports, "ApplicationContext", { enumerable: true, get: function () { return application_1.ApplicationContext; } });
+Object.defineProperty(exports, "PLATFORM_SCOPE", { enumerable: true, get: function () { return application_1.PLATFORM_SCOPE; } });
 function createPlatformFactory(createPlatform) {
     var providers = [];
     for (var _i = 1; _i < arguments.length; _i++) {
@@ -21,4 +25,3 @@ function createPlatformFactory(createPlatform) {
         return createPlatform(appContext, injectorProviders);
     };
 }
-exports.createPlatformFactory = createPlatformFactory;

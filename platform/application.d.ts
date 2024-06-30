@@ -1,13 +1,6 @@
 import { Provider, Type } from '@fm/di';
-type MetadataProps = {
-    [key: string]: any;
-};
 export declare const PLATFORM_SCOPE = "platform";
-export interface MetadataInfo {
-    load(): Promise<MetadataProps> | MetadataProps;
-}
 export declare class ApplicationContext {
-    private runStart;
     private dynamicInjectors;
     private _providers;
     private _platformProviders;
@@ -16,13 +9,9 @@ export declare class ApplicationContext {
     private addInjector;
     private deleteInjector;
     private setDynamicProv;
-    addProvider(provider: Provider): void;
+    addProvider(providers: Provider): void;
     private getApp;
-    private registerApp;
-    registerPlugin(plugin: Type): void;
-    registerStart(runStart: () => any): void;
-    makeApplicationDecorator(): (metadata?: MetadataProps | Type<MetadataInfo>) => ClassDecorator;
+    registerApp(app: Type, metadata?: any): void;
     get platformProviders(): Provider[];
     get providers(): Provider[];
 }
-export {};

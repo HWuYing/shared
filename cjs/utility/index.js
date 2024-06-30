@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cloneDeepPlain = void 0;
+exports.cloneDeepPlain = cloneDeepPlain;
 var lodash_1 = require("lodash");
 function cloneDeepPlain(value) {
     return (0, lodash_1.cloneDeepWith)(value, function (obj) {
@@ -8,4 +8,3 @@ function cloneDeepPlain(value) {
             return obj;
     });
 }
-exports.cloneDeepPlain = cloneDeepPlain;

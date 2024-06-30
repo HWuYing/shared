@@ -1,10 +1,9 @@
 import { __awaiter } from "tslib";
 /* eslint-disable no-await-in-loop */
-import { Injector, INJECTOR_SCOPE, InjectorToken, makeDecorator, ROOT_SCOPE, setInjectableDef } from '@fm/di';
+import { Injector, INJECTOR_SCOPE, InjectorToken, ROOT_SCOPE } from '@fm/di';
+import { forEach } from 'lodash';
 import { APPLICATION_METADATA, APPLICATION_PLUGIN, APPLICATION_TOKEN, RUNTIME_INJECTOR } from '../token';
 import { cloneDeepPlain } from '../utility';
-import { execute } from './decorator';
-const APPLICATION = 'Application';
 const DELETE_TOKEN = InjectorToken.get('DELETE_TOKEN');
 export const PLATFORM_SCOPE = 'platform';
 export class ApplicationContext {
@@ -33,20 +32,21 @@ export class ApplicationContext {
     setDynamicProv(provider, isPlatform = false) {
         const provide = provider.provide;
         this.dynamicInjectors.forEach((injector) => {
-            const needPush = isPlatform ? injector.scope === PLATFORM_SCOPE : injector.scope !== PLATFORM_SCOPE;
-            if (needPush)
+            if (injector.scope === PLATFORM_SCOPE === isPlatform)
                 injector.set(provide, provider);
         });
     }
-    addProvider(provider) {
-        const isPlatform = provider.providedIn === PLATFORM_SCOPE;
-        const providers = isPlatform ? this._platformProviders : this._providers;
-        providers.push(provider);
-        this.setDynamicProv(provider, isPlatform);
+    addProvider(providers) {
+        forEach([providers], (provider) => {
+            const isPlatform = provider.providedIn === PLATFORM_SCOPE;
+            const _providers = isPlatform ? this._platformProviders : this._providers;
+            _providers.push(provider);
+            this.setDynamicProv(provider, isPlatform);
+        });
     }
-    getApp(injector, app, metadata = {}) {
-        var _a, _b;
-        return __awaiter(this, void 0, void 0, function* () {
+    getApp(injector_1, app_1) {
+        return __awaiter(this, arguments, void 0, function* (injector, app, metadata = {}) {
+            var _a, _b;
             const isProvide = typeof metadata === 'function' || metadata instanceof InjectorToken;
             const _metadata = isProvide ? yield Promise.resolve(((_a = injector.get(metadata)) === null || _a === void 0 ? void 0 : _a.load()) || {}) : metadata;
             injector.set(APPLICATION_METADATA, { provide: APPLICATION_METADATA, useFactory: () => cloneDeepPlain(_metadata) });
@@ -60,19 +60,6 @@ export class ApplicationContext {
     registerApp(app, metadata = {}) {
         const appFactory = (injector) => __awaiter(this, void 0, void 0, function* () { return this.getApp(injector, app, metadata); });
         this.addProvider({ provide: APPLICATION_TOKEN, useFactory: appFactory, deps: [Injector] });
-        setInjectableDef(app);
-        execute(this);
-        this.runStart();
-    }
-    registerPlugin(plugin) {
-        this.addProvider({ provide: APPLICATION_PLUGIN, multi: true, useExisting: plugin });
-    }
-    registerStart(runStart) {
-        this.runStart = runStart;
-    }
-    makeApplicationDecorator() {
-        const props = (metadata) => ({ metadata });
-        return makeDecorator(APPLICATION, props, (injectableType, metadata) => this.registerApp(injectableType, metadata));
     }
     get platformProviders() {
         return this._platformProviders;
