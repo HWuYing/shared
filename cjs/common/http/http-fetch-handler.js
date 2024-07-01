@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HttpFetchHandler = void 0;
 var tslib_1 = require("tslib");
-var di_1 = require("@fm/di");
+var di_1 = require("@hwy-fm/di");
 var rxjs_1 = require("rxjs");
 var app_context_1 = require("../../providers/app-context");
 var HttpFetchHandler = /** @class */ (function () {

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Input = exports.runtimeInjector = exports.makeApplication = exports.Prov = exports.ApplicationPlugin = exports.Register = exports.createRegisterLoader = exports.registerProvider = void 0;
 var tslib_1 = require("tslib");
 /* eslint-disable max-len */
-var di_1 = require("@fm/di");
+var di_1 = require("@hwy-fm/di");
 var lodash_1 = require("lodash");
 var token_1 = require("../token");
 var _1 = require(".");

@@ -1,4 +1,4 @@
-import { Provider, Type } from '@fm/di';
+import { Provider, Type } from '@hwy-fm/di';
 export declare const PLATFORM_SCOPE = "platform";
 export declare class ApplicationContext {
     private dynamicInjectors;

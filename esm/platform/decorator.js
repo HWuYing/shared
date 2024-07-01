@@ -1,6 +1,6 @@
 import { __rest } from "tslib";
 /* eslint-disable max-len */
-import { Inject, makeDecorator, makeMethodDecorator, setInjectableDef } from '@fm/di';
+import { Inject, makeDecorator, makeMethodDecorator, setInjectableDef } from '@hwy-fm/di';
 import { get } from 'lodash';
 import { APPLICATION_METADATA, APPLICATION_PLUGIN, RUNTIME_INJECTOR } from '../token';
 import { ApplicationContext } from '.';

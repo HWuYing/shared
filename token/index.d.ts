@@ -1,4 +1,4 @@
-import { InjectorToken } from '@fm/di';
+import { InjectorToken } from '@hwy-fm/di';
 export declare const HTTP_INTERCEPTORS: InjectorToken;
 export declare const APPLICATION_TOKEN: InjectorToken;
 export declare const APPLICATION_PLUGIN: InjectorToken;

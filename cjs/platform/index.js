@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PLATFORM_SCOPE = exports.ApplicationContext = void 0;
 exports.createPlatformFactory = createPlatformFactory;
-var di_1 = require("@fm/di");
+var di_1 = require("@hwy-fm/di");
 var token_1 = require("../token");
 var application_1 = require("./application");
 Object.defineProperty(exports, "ApplicationContext", { enumerable: true, get: function () { return application_1.ApplicationContext; } });

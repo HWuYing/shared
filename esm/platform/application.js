@@ -1,6 +1,6 @@
 import { __awaiter } from "tslib";
 /* eslint-disable no-await-in-loop */
-import { Injector, INJECTOR_SCOPE, InjectorToken, ROOT_SCOPE } from '@fm/di';
+import { Injector, INJECTOR_SCOPE, InjectorToken, ROOT_SCOPE } from '@hwy-fm/di';
 import { forEach } from 'lodash';
 import { APPLICATION_METADATA, APPLICATION_PLUGIN, APPLICATION_TOKEN, RUNTIME_INJECTOR } from '../token';
 import { cloneDeepPlain } from '../utility';

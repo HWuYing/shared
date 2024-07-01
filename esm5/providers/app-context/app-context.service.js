@@ -1,5 +1,5 @@
 import { __decorate, __metadata, __param } from "tslib";
-import { Inject, Injector, InjectorToken } from '@fm/di';
+import { Inject, Injector, InjectorToken } from '@hwy-fm/di';
 export var APP_CONTEXT = InjectorToken.get('APP_CONTEXT');
 var AppContextService = /** @class */ (function () {
     function AppContextService(injector) {

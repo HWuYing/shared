@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HttpClient = void 0;
 var tslib_1 = require("tslib");
-var di_1 = require("@fm/di");
+var di_1 = require("@hwy-fm/di");
 var operators_1 = require("rxjs/operators");
 var consts_1 = require("./consts");
 var http_handler_1 = require("./http-handler");
