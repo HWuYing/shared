@@ -20,5 +20,5 @@ export declare const ApplicationPlugin: () => ClassDecorator;
 export declare const Prov: ProvDecorator;
 export declare const makeApplication: (handler: (applicationContext: ApplicationContext) => void) => (metadata?: Type<MetadataInfo> | MetadataProps) => ClassDecorator;
 export declare const runtimeInjector: (loader: (injector: Injector) => void) => void;
-export declare const Input: (key: string) => import("@hwy-fm/di").TargetDecorator;
+export declare const Input: (key: string) => import("../../di").TargetDecorator;
 export {};
