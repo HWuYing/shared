@@ -1,4 +1,4 @@
-import { Injector } from '@fm/di';
+import { Injector } from '@hwy-fm/di';
 import { PLATFORM } from '../token';
 export { ApplicationContext, PLATFORM_SCOPE } from './application';
 export function createPlatformFactory(createPlatform) {

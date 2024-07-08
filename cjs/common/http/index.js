@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HttpInterceptingHandler = exports.createResponse = exports.HttpHandler = exports.HttpFetchHandler = exports.HttpClient = void 0;
 var tslib_1 = require("tslib");
-var di_1 = require("@fm/di");
+var di_1 = require("@hwy-fm/di");
 var token_1 = require("../../token");
 var http_fetch_handler_1 = require("./http-fetch-handler");
 var http_intercept_handler_1 = require("./http-intercept-handler");

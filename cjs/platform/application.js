@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ApplicationContext = exports.PLATFORM_SCOPE = void 0;
 var tslib_1 = require("tslib");
 /* eslint-disable no-await-in-loop */
-var di_1 = require("@fm/di");
+var di_1 = require("@hwy-fm/di");
 var lodash_1 = require("lodash");
 var token_1 = require("../token");
 var utility_1 = require("../utility");

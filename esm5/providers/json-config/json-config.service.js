@@ -1,5 +1,5 @@
 import { __decorate, __metadata, __param } from "tslib";
-import { Inject, Injector } from '@fm/di';
+import { Inject, Injector } from '@hwy-fm/di';
 var JsonConfigService = /** @class */ (function () {
     function JsonConfigService(injector) {
         this.injector = injector;

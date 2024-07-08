@@ -1,5 +1,5 @@
 import { __assign, __decorate, __metadata } from "tslib";
-import { Injectable } from '@fm/di';
+import { Injectable } from '@hwy-fm/di';
 import { mergeMap } from 'rxjs/operators';
 import { RequestMethod } from './consts';
 import { HttpHandler } from './http-handler';

@@ -1,4 +1,4 @@
-import { InjectorToken } from '@fm/di';
+import { InjectorToken } from '@hwy-fm/di';
 export const HTTP_INTERCEPTORS = InjectorToken.get('HTTP_INTERCEPTORS');
 export const APPLICATION_TOKEN = InjectorToken.get('APPLICATION_TOKEN');
 export const APPLICATION_PLUGIN = InjectorToken.get('APPLICATION_PLUGIN');

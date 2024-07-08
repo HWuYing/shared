@@ -1,4 +1,4 @@
-import { Injector } from '@fm/di';
+import { Injector } from '@hwy-fm/di';
 import { Observable } from 'rxjs';
 export declare abstract class JsonConfigService {
     protected injector: Injector;

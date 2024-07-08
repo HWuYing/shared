@@ -1,4 +1,4 @@
-import { Injector } from '@fm/di';
+import { Injector } from '@hwy-fm/di';
 import { Subject } from 'rxjs';
 import { RouteInfo } from './type-api';
 export declare class CustomHistory {

@@ -1,5 +1,5 @@
 import { __awaiter, __decorate, __generator, __metadata } from "tslib";
-import { Injectable, Injector } from '@fm/di';
+import { Injectable, Injector } from '@hwy-fm/di';
 import { lastValueFrom, Subject } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { HISTORY, ROUTER_CONFIG } from '../../token';

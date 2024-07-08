@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Input = exports.runtimeInjector = exports.makeApplication = exports.Prov = exports.ApplicationPlugin = exports.Register = exports.createRegisterLoader = exports.registerProvider = void 0;
 var tslib_1 = require("tslib");
 /* eslint-disable max-len */
-var di_1 = require("@fm/di");
+var di_1 = require("@hwy-fm/di");
 var lodash_1 = require("lodash");
 var token_1 = require("../token");
 var _1 = require(".");
@@ -20,7 +20,7 @@ var createRegisterLoader = function (token) {
     };
 };
 exports.createRegisterLoader = createRegisterLoader;
-exports.Register = (0, di_1.makeDecorator)('Register', function (providers) { return ({ providers: providers }); }, function (_type, providers) { return (0, exports.registerProvider)(providers); });
+exports.Register = (0, di_1.makeDecorator)('Register', exports.registerProvider);
 exports.ApplicationPlugin = (0, di_1.makeDecorator)('ApplicationPlugin', undefined, function (plugin) {
     (0, exports.registerProvider)({ provide: token_1.APPLICATION_PLUGIN, multi: true, useExisting: (0, di_1.setInjectableDef)(plugin) });
 });

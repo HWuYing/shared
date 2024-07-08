@@ -1,6 +1,6 @@
 import { __assign, __rest, __spreadArray } from "tslib";
 /* eslint-disable max-len */
-import { Inject, makeDecorator, makeMethodDecorator, setInjectableDef } from '@fm/di';
+import { Inject, makeDecorator, makeMethodDecorator, setInjectableDef } from '@hwy-fm/di';
 import { get } from 'lodash';
 import { APPLICATION_METADATA, APPLICATION_PLUGIN, RUNTIME_INJECTOR } from '../token';
 import { ApplicationContext } from '.';
@@ -15,7 +15,7 @@ export var createRegisterLoader = function (token) {
         list.push(loader);
     };
 };
-export var Register = makeDecorator('Register', function (providers) { return ({ providers: providers }); }, function (_type, providers) { return registerProvider(providers); });
+export var Register = makeDecorator('Register', registerProvider);
 export var ApplicationPlugin = makeDecorator('ApplicationPlugin', undefined, function (plugin) {
     registerProvider({ provide: APPLICATION_PLUGIN, multi: true, useExisting: setInjectableDef(plugin) });
 });

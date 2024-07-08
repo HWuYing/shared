@@ -1,5 +1,5 @@
 import { __decorate, __metadata } from "tslib";
-import { Injectable, Injector } from '@fm/di';
+import { Injectable, Injector } from '@hwy-fm/di';
 import { HTTP_INTERCEPTORS } from '../../token';
 import { HttpFetchHandler } from './http-fetch-handler';
 import { HttpInterceptHandler } from './http-intercept-handler';

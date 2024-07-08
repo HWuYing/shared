@@ -1,4 +1,4 @@
-import { Injector, Provider, TokenKey, Type } from '@fm/di';
+import { Injector, Provider, TokenKey, Type } from '@hwy-fm/di';
 import { ApplicationContext } from '.';
 type MetadataProps = {
     [key: string]: any;
@@ -15,7 +15,7 @@ export interface MetadataInfo {
 }
 export declare const registerProvider: (provider: Provider) => number;
 export declare const createRegisterLoader: <T>(token: TokenKey) => (loader: T) => void;
-export declare const Register: (providers: Provider[]) => ClassDecorator;
+export declare const Register: (provider: Provider) => ClassDecorator;
 export declare const ApplicationPlugin: () => ClassDecorator;
 export declare const Prov: ProvDecorator;
 export declare const makeApplication: (handler: (applicationContext: ApplicationContext) => void) => (metadata?: Type<MetadataInfo> | MetadataProps) => ClassDecorator;
