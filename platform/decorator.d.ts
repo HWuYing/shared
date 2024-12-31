@@ -15,10 +15,10 @@ export interface MetadataInfo {
 }
 export declare const registerProvider: (provider: Provider) => number;
 export declare const createRegisterLoader: <T>(token: TokenKey) => (loader: T) => void;
-export declare const Register: (provider: Provider) => ClassDecorator;
-export declare const ApplicationPlugin: () => ClassDecorator;
+export declare const Register: (provider: Provider) => import("../../di/decorators").ClassDecorator<any>;
+export declare const ApplicationPlugin: () => import("../../di/decorators").ClassDecorator<PluginIntercept>;
 export declare const Prov: ProvDecorator;
-export declare const makeApplication: (handler: (applicationContext: ApplicationContext) => void) => (metadata?: Type<MetadataInfo> | MetadataProps) => ClassDecorator;
+export declare const makeApplication: <T = Type<MetadataInfo> | MetadataProps>(handler: (applicationContext: ApplicationContext) => void) => (metadata?: T) => import("../../di/decorators").ClassDecorator<any>;
 export declare const runtimeInjector: (loader: (injector: Injector) => void) => void;
-export declare const Input: (key: string) => import("../../di").TargetDecorator;
+export declare const Input: (key: string) => import("../../di/decorators").TargetDecorator;
 export {};

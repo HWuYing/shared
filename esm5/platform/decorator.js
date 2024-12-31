@@ -41,7 +41,7 @@ export var makeApplication = function (handler) {
         applicationContext.registerApp(setInjectableDef(type), metadata);
         handler(applicationContext);
     }
-    return makeDecorator('Application', function (metadata) { return ({ metadata: metadata }); }, typeFn);
+    return makeDecorator('Application', undefined, typeFn);
 };
 export var runtimeInjector = createRegisterLoader(RUNTIME_INJECTOR);
 export var Input = function (key) { return Inject(APPLICATION_METADATA, { metadataName: 'InputPropDecorator', transform: transform(key) }); };

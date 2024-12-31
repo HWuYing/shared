@@ -46,7 +46,7 @@ var makeApplication = function (handler) {
         applicationContext.registerApp((0, di_1.setInjectableDef)(type), metadata);
         handler(applicationContext);
     }
-    return (0, di_1.makeDecorator)('Application', function (metadata) { return ({ metadata: metadata }); }, typeFn);
+    return (0, di_1.makeDecorator)('Application', undefined, typeFn);
 };
 exports.makeApplication = makeApplication;
 exports.runtimeInjector = (0, exports.createRegisterLoader)(token_1.RUNTIME_INJECTOR);
