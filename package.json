@@ -1,6 +1,6 @@
 {
 	"name": "@hwy-fm/core",
-	"version": "0.0.1.beta.1",
+	"version": "0.0.1-beta.2",
 	"private": false,
 	"description": "",
 	"main": "./cjs/index.js",
@@ -163,6 +163,9 @@
 	},
 	"author": "",
 	"license": "ISC",
+	"dependencies": {
+		"@hwy-fm/di": "^0.0.1-beta.2"
+	},
 	"sideEffects": [
 		"*.effects.js"
 	]
